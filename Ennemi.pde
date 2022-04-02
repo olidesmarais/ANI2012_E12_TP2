@@ -1,4 +1,4 @@
-class Ennemi {
+/*class Ennemi {
   PVector position;
   Jauge jaugeVie;
   int dimension;
@@ -117,4 +117,4 @@ class Ennemi {
     }
     return false;
   }
-}
+}*/

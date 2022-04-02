@@ -1,4 +1,4 @@
-class Etoile {
+/*class Etoile {
   PVector position;
   int hauteur, largeur;
   float diametreContour;
@@ -78,4 +78,4 @@ class Etoile {
     return (distance <= diametreAttraperEtoile / 2 + diametreContour / 2);
   }
   
-}
+}*/

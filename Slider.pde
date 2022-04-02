@@ -1,4 +1,4 @@
-class Slider {
+/*class Slider {
   PVector posJour, posNuit;
   PVector posIndicateur;
   float longueur;
@@ -88,4 +88,4 @@ class Slider {
       sonClic.play();
     }
   }
-}
+}*/
