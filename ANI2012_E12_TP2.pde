@@ -29,15 +29,8 @@ boolean pressed;
 PFont policeTitre, policeTexte, policeBouton;
 
 //Structure du jeu
-boolean debut, jeu, fin;
+boolean debut, jeu; //, fin;
 Bouton bCommencer;
-Bouton bRejouer;
-boolean termine;
-boolean victoire;
-SoundFile sonVictoire;
-SoundFile sonDefaite;
-PImage imgCanevas;
-
 
 //Environnement
 PImage imgAccueil;
@@ -89,7 +82,7 @@ void setup() {
   //Structure du jeu
   debut = true;
   jeu = false;
-  fin = false;
+  //fin = false;
   sonClic = new SoundFile(this, "audios/sonClic.wav");
   
   //Polices
@@ -100,20 +93,11 @@ void setup() {
   //Début du jeu
   bCommencer = new Bouton (centreX, 525, 285, 85, false, "COMMENCER", 22);
   
-  //Fin du jeu
-  termine = false;
-  imgCanevas = createImage(dimensionX, dimensionY, RGB);
-  bRejouer = new Bouton (centreX, centreY + dimensionCadreFin / 3, 200, 50, true, "REJOUER", 15);
-  sonVictoire = new SoundFile(this, "audios/victoire.aiff");
-  sonDefaite = new SoundFile(this, "audios/sonDefaite.wav");
-  
   //Environnement
   imgAccueil = loadImage("images/ACCEUIL.png");
-  
   imgBackground1 = loadImage("images/LAYER01_BCKGRND.png");
   imgBackground2 = loadImage("images/LAYER02_BCKGRND.png");
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
-  
   imgPremierPlan = loadImage("images/FORET_M1.png");
 
   //Baguette
@@ -158,37 +142,11 @@ void draw() {
         jouerMusique();
       delaiMusique -= frequenceMusique;
     }
-    
-    /*//Fin du jeu
-    //Le jeu prend fin si le nombre fixé comme objectif est atteint
-    if (nbKills >= objectifVictoire || listeEnnemis.size() >= objectifDefaite) {
-      termine = true;
-      //VICTOIRE : Le nombre d'ennemis éléminé atteint l'objectifVictoire (30)
-      //L'invasion des ennemis est empêchée.
-      if (nbKills >= objectifVictoire) {
-        victoire = true;
-        sonVictoire.play();
-      //DÉFAITE : Le nombre d'ennemis à l'écran a atteint l'objectifDefaite (5)
-      //L'invasion des ennemis est une réussite.
-      } else {
-        victoire = false;
-        sonDefaite.play();
-      }
-    }*/
-    //La fonction transitionFin() est appelée une seule fois au moment de l'atteinte
-    //de l'objectif. En plus d'arrêter la musique et de passer en mode "fin"
-    //elle permet d'afficher l'arrière plan de l'écran de fin. Cette étape étant
-    //exigeante pour le programme, elle n'est exécutée qu'une seule fois pour
-    //éviter de ralentir son exécution.
-    if (termine) {
-      transitionFin();
-    }
   }
-
-  //Écran de fin
+  /*//Écran de fin
   if (fin) {
     afficherFin();
-  }
+  }*/
 }
 
 void mousePressed() {
@@ -204,16 +162,7 @@ void mouseReleased() {
   //rétroaction informe le joueur du manque de magie par un son et le cadre de
   //la jauge de magie qui change au rouge.
   if (jeu){
-    /*if (isJour) {
-      if(mouseY < height - hauteurCockpit) {
-        if (jaugeMagie.niveau >= 10)
-          attaquer();
-        else {
-          sonManqueMagie.play();
-          jaugeMagie.couleurContour = color(255, 0, 0, 255);
-        }
-      }
-    }*/
+
   }
   
   //Pendant le début :
@@ -228,11 +177,11 @@ void mouseReleased() {
   //Pendant la fin :
   //Il est vérifié si le relâchement de la souris démontre le désir de cliquer
   //sur le bouton rejouer.
-  if (fin) {
+  /*if (fin) {
     if (bRejouer.verifierSuperposition()) {
       clicBouton();
     }
-  }
+  }*/
   
   //La souris n'est plus pressée
   pressed = false;
@@ -242,10 +191,6 @@ void keyReleased() {
   //Raccourci pour le slider jour-nuit (ESPACE)
   if (key == ' ') {
     println("isPSEtoileActive : " + isPSEtoileActive);
-    /*if (isJour)
-      sliderJourNuit.deplacement('n');
-    else
-      sliderJourNuit.deplacement('j');*/
   }
   
   //Raccourci pour cliquer sur un bouton (ENTER)
@@ -311,8 +256,8 @@ void afficherAccueil() {
 }
 
 void afficherJeu() {
+  //Afficher le décor
   imageMode(CORNER);
-  
   image(imgBackground3, 0, 0);
   image(imgBackground2, 0, 0);
   image(imgBackground1, 0, 0);
@@ -336,29 +281,9 @@ void afficherFin() {
   //Afficher le texte
   textAlign(CENTER, CENTER);
   fill(0);
-  //Dans le cas d'une victoire, le nombre d'ennemis éléminés est indiqué.
-  if (victoire) {
-    textFont(policeTitre, 50);
-    fill(0, 255, 0);
-    text("Victoire !", centreX, centreY - dimensionCadreFin / 3);
-    //text("Victoire !!!", centreX, centreY - dimensionCadreFin / 3);
-    
-    fill(0);
-    textFont(policeTexte, 18);
-    //text("Nombre de kills : " + nbKills, centreX, centreY);
-  //Dans le cas d'une défaite, le nombre d'ennemis à l'écran est indiqué.
-  } else {
-    textFont(policeTitre, 30);
-    fill(255, 0, 0);
-    text("Vous n'avez pas \n pu prévenir l'invasion ...", centreX, centreY - dimensionCadreFin / 3);
-    
-    fill(0);
-    textFont(policeTexte, 18);
-    //text("Nombre de kills : " + nbKills, centreX, centreY);
-  }
   
   //Affichage du bouton pour rejouer
-  bRejouer.render();
+  //bRejouer.render();
 }
 
 //Fonction permettant la synthétisation de la musique ambiante pendant le jeu.
@@ -375,26 +300,6 @@ void jouerMusique() {
     idxNote = 0;
 }
 
-//Fonction enclenchée lorsque l'objectif du jeu est atteint.
-//Quelques étapes sont suivis dans le passage du jeu vers la fin. 
-void transitionFin() {
-  //Arrêt de la musique
-  musique.stop();
-  
-  //Capture du canevas au moment où l'objectif est atteint.
-  imgCanevas = get(0, 0, dimensionX, dimensionY);
-  
-  //Transition vers la fin du jeu.
-  termine = false;
-  jeu = false;
-  fin = true;
-  
-  //Afficher de l'arrière-plan de l'écran de fin.
-  imageMode(CORNER);
-  imgCanevas.filter(BLUR, 10);
-  image(imgCanevas, 0, 0);
-}
-
 //Fonction appelée lorsque le bouton "commencer" est appuyé
 void clicBouton() {
   //Initialisation de la partie
@@ -403,7 +308,7 @@ void clicBouton() {
   //Transition du début/de la fin du jeu vers le jeu
   jeu = true;
   debut = false;
-  fin = false;
+  //fin = false;
   
   //Son du bouton
   sonClic.play();
