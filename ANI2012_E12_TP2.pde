@@ -12,6 +12,8 @@
 //Importations de la classe Sound afin de pouvoir jouer des sons
 import processing.sound.*;
 
+import java.util.Iterator;
+
 //Strcture canevas
 final int dimensionX = 1020;
 final int dimensionY = 720;
@@ -35,49 +37,25 @@ boolean victoire;
 SoundFile sonVictoire;
 SoundFile sonDefaite;
 PImage imgCanevas;
-//Nombre d'ennemis à éliminer pour gagner
-final int objectifVictoire = 30;
-//Nombre maximal affiché à l'écran
-final int objectifDefaite = 5;
+
 
 //Environnement
 PImage imgAccueil;
-PImage imgPrincial_avantPlan, imgPrincial_planMedian, imgPrincial_arrierePlan;
-//PImage cielJour, cielNuit;
-//PImage cockpit;
+PImage imgBackground1, imgBackground2, imgBackground3;
+PImage imgPremierPlan;
 final int hauteurCockpit = 242;
 final int dimensionCadreFin = 400;
 SoundFile sonClic;
 
-/*//Slidder jour-nuit
-boolean isJour;
-Slider sliderJourNuit;*/
-
 //Étoiles
 SoundFile sonEtoile;
-/*ArrayList<Etoile> listeEtoiles;
-final float frequenceEtoiles = 1.0f;
-float delaiEtoiles;
-PImage[] etoilesRef;
-//Taille du cercle pour attraper les étoiles
-final int diametreAttraperEtoile = 50;*/
 
-/*//Ennemis
-ArrayList<Ennemi> listeEnnemis;
-float delaiEnnemis;
-final float frequenceEnnemis = 2.0f;
-PImage[] imgEnnemis;
-SoundFile sonEnnemi;*/
+//Baguette
+PImage imgBaguette;
+boolean isPSEtoileActive = false;
+ParticleSystem psEtoile;
+int psEtoileCompte = 500;
 
-//Attaque
-/*final float diametreAttaqueMax = 150;
-int nbKills;
-SoundFile sonAttaque;*/
-
-//Jauge magie
-/*Jauge jaugeMagie;
-SoundFile sonManqueMagie;
-boolean manqueMagie;*/
 
 //Gestion du temps
 float tempsEcoule, tempsCourant;
@@ -133,35 +111,20 @@ void setup() {
   
   //Environnement
   imgAccueil = loadImage("images/ACCEUIL.png");
-  imgPrincial_avantPlan = loadImage("images/avantPlan.png");
-  imgPrincial_planMedian = loadImage("images/planMedian.png");
-  imgPrincial_arrierePlan = loadImage("images/arrierePlan.png");
-  //cielJour = loadImage("images/CIEL_JOUR.png");
-  //cielNuit = loadImage("images/CIEL_NUIT.png");
-  //cockpit = loadImage("images/CABINE_M2.png");
   
-  //Slider jour-nuit
-  //sliderJourNuit = new Slider(698.0f, 547.0f);
+  imgBackground1 = loadImage("images/LAYER01_BCKGRND.png");
+  imgBackground2 = loadImage("images/LAYER02_BCKGRND.png");
+  imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
+  
+  imgPremierPlan = loadImage("images/FORET_M1.png");
   
   //Étoiles
   sonEtoile = new SoundFile(this, "audios/sonEtoileMono.mp3");
-  //etoilesRef = new PImage[3];
-  //etoilesRef[0] = loadImage("images/etoile/grande.png");
-  //etoilesRef[1] = loadImage("images/etoile/petite.png");
-  //etoilesRef[2] = loadImage("images/etoile/ronde.png");
+
   
-  //Ennemis
-  //genererImageEnnemi();
-  //sonEnnemi = new SoundFile(this, "audios/Grunt2.wav");
-  
-  //Attaque
-  //sonAttaque = new SoundFile(this, "audios/sonAttaque.mp3");
-  //sonAttaque.amp(0.1f);
-  
-  //Jauge magie
-  //jaugeMagie = new Jauge(283, 518, 175, 30, 100, 1.0f, color(255, 255, 0, 255), color(4, 51, 83, 255));
-  //sonManqueMagie = new SoundFile(this, "audios/SonManqueMagie.wav");
-  //sonManqueMagie.amp(0.1f);
+  //Baguette
+  imgBaguette = loadImage("images/BAGUETTE01.png");
+  psEtoile = new ParticleSystem(psEtoileCompte, ParticleSystem.PARTICLE_TYPE_ETOILE);
     
   //Musique
   musique = new SinOsc(this);
@@ -185,39 +148,8 @@ void draw() {
 
     //Gestion du temps
     tempsEcoule = (millis() - tempsCourant) / 1000.0f;
-    //delaiEtoiles += tempsEcoule;
-    //delaiEnnemis += tempsEcoule;
     delaiMusique += tempsEcoule;
     tempsCourant = millis();
-    
-    //Slider jour-nuit
-    //sliderJourNuit.update();
-    
-    //Jauge magie
-    //jaugeMagie.update();
-    
-    //Étoiles
-    //Mécanisme d'ajout d'étoiles à fréquence régulière
-    /*if (delaiEtoiles > frequenceEtoiles) {
-      ajouterEtoile();
-      delaiEtoiles -= frequenceEtoiles;
-    }
-    //Si c'est le na nuit et que la souris est pressée, 
-    //le mode permettant d'attraper des étoiles s'active.
-    if (!isJour && pressed) {
-      attraperEtoiles();
-    }*/
-      
-    //Ennemis
-    //Mémanisme d'ajout d'ennemis à intervalle régulier
-    /*if (delaiEnnemis > frequenceEnnemis) {
-      ajouterEnnemi();
-      delaiEnnemis -= frequenceEnnemis;
-    }*/
-    //Mise à jour en temps réel du niveau de vie des ennemis
-    //avec mise à jour de l'affichage et de la collection d'ennemis
-    //en conséquence
-    //updateEnnemis();
       
     //Jouer la musique
     //La vitesse de la musique est directement proportionnelle avec le nombre
@@ -312,6 +244,7 @@ void mouseReleased() {
 void keyReleased() {
   //Raccourci pour le slider jour-nuit (ESPACE)
   if (key == ' ') {
+    println("isPSEtoileActive : " + isPSEtoileActive);
     /*if (isJour)
       sliderJourNuit.deplacement('n');
     else
@@ -337,24 +270,6 @@ void keyReleased() {
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
 //à leur état initial
 void initialisation() {
-  
-  //Toggle jour-nuit 
-  //isJour = true;
-  
-  //Étoiles
-  //listerEtoiles();
-  //delaiEtoiles = 0.0f;
-  
-  //Ennemis
-  //listerEnnemis();
-  //delaiEnnemis = 0.0f;
-  
-  //Jauge pouvoir
-  /*jaugeMagie.niveau = 100;
-  jaugeMagie.niveauCourant = 100;
-  jaugeMagie.couleurContour = color(4, 51, 83, 255);
-  nbKills = 0;*/
- 
   //Gestion du temps
   tempsEcoule = 0.0f;
   tempsCourant = 0.0f;
@@ -401,22 +316,12 @@ void afficherAccueil() {
 void afficherJeu() {
   imageMode(CORNER);
   
-  image(imgPrincial_arrierePlan, 0, 0, dimensionX, dimensionY);
-  image(imgPrincial_planMedian, 0, 0, dimensionX, dimensionY);
-  image(imgPrincial_avantPlan, 0, 0, dimensionX, dimensionY);
+  image(imgBackground3, 0, 0);
+  image(imgBackground2, 0, 0);
+  image(imgBackground1, 0, 0);
+  image(imgPremierPlan, 0, 0);
   
-  /*//Le jour : afficher le background et les ennemis
-  if(isJour) {
-    image(cielJour, 0, 0);
-    afficherEnnemis();
-  //La nuit : afficher le background et les étoiles
-  } else {
-    image(cielNuit, 0, 0);
-    afficherEtoiles();
-  }
-  
-  //Afficher le cockpit
-  afficherCockpit();*/
+  afficherBaguette();
 }
 
 void afficherFin() {
@@ -458,225 +363,6 @@ void afficherFin() {
   //Affichage du bouton pour rejouer
   bRejouer.render();
 }
-
-//Lorsqu'un ennemi est ajouté à la collection d'ennemis, un feedback est transmis au joueur
-//en colorant l'écran de la couleur 
-void teinterEcran() {
-  //Copie de l'écran actuel  
-  PImage ecran = get (0, 0, dimensionX, dimensionY);
-  //Affichage de l'écran avec une teinte rouge
-  tint(255, 0, 0, 255);
-  imageMode(CORNER);
-  image(ecran, 0, 0);
-  
-  //Rétablissement de la teinte
-  tint(255, 255);
-}
-
-/*void afficherCockpit() {
-  //Affichage de l'image du cockpit
-  imageMode(CORNER);
-  image(cockpit, 0, 0);
- 
-  //Affichage des outils
-  afficherRadar();
-  sliderJourNuit.render();
-  jaugeMagie.render();
-}*/
-
-/*void afficherRadar() {
-  //Position du radar
-  PVector posRadar = new PVector(455, 505);
-  int hRadar = 100;
-  int wRadar = 145;
-  //Références minimales et maximales de coordonnées X et Y des ennemis
-  PVector posEnnemisMin = new PVector (0 - 400 / 2, 0 - 400 / 2);
-  PVector posEnnemisMax = new PVector (dimensionX - 400 / 2, dimensionY - hauteurCockpit - 400 / 2);
-  
-  //Déterminer l'emplacement et afficher les ennemis sur le radar 
-  float posRelativeX, posRelativeY, dimensionRelative;
-  for (int idx = 0 ; idx < listeEnnemis.size() ; idx++) {
-    //Déterminer la position des ennemis sur le radar
-    posRelativeX = map(listeEnnemis.get(idx).position.x, posEnnemisMin.x, posEnnemisMax.x, posRadar.x, posRadar.x + wRadar);
-    posRelativeY = map(listeEnnemis.get(idx).position.y, posEnnemisMin.y, posEnnemisMax.y, posRadar.y, posRadar.y + hRadar);
-    dimensionRelative = map(listeEnnemis.get(idx).dimension, 200, 400, 5, 10);
-    
-    //Affichage du triangle
-    fill(255, 0, 0);
-    noStroke();
-    triangle(
-      posRelativeX + dimensionRelative / 2, posRelativeY, 
-      posRelativeX, posRelativeY + dimensionRelative,
-      posRelativeX + dimensionRelative, posRelativeY + dimensionRelative
-    );
-  }
-  //Nombre d'ennemis au centre du radar
-  fill(255);
-  textFont(policeTexte, 10);
-  text(listeEnnemis.size(), 540, 579);
-}*/
-
-//Fonction permettant de créer la collection d'étoile à l'initialisation du jeu.
-//Un nombre aléatoile d'étoiles (entre 1 et 9) est ajouté à la collection.
-/*void listerEtoiles() {
-  int nbEtoiles = int(random(1, 10));
-  listeEtoiles = new ArrayList<Etoile>();
-
-  for (int idx = 0; idx < nbEtoiles ; idx++) {
-    //Instanciation de l'objet étoile
-    Etoile etoile = new Etoile();
-    //Ajout à la collection d'étoiles
-    listeEtoiles.add(etoile);
-  }
-}*/
-
-//Fonction permettant d'afficher toutes les étoiles de la collection
-/*void afficherEtoiles() { 
-  for (int idx = 0; idx < listeEtoiles.size() ; idx++) {
-    listeEtoiles.get(idx).render();
-  }
-}*/
-
-//Fonction ajoutant une étoile à la collection 
-/*void ajouterEtoile() {
-  if (listeEtoiles.size() < 20) {
-    Etoile etoile = new Etoile();
-    listeEtoiles.add(etoile);
-  }
-}*/
-
-//Fonction enclenchée lorsque la souris est enfoncée dans le ciel pendant la nuit.
-/*void attraperEtoiles() {
-  //Afficher le cercle qui permet d'attraper les étoiles
-  fill(255, 100);
-  noStroke();
-  if (mouseY < height - hauteurCockpit)
-    ellipse(mouseX, mouseY, diametreAttraperEtoile, diametreAttraperEtoile);
-  
-  //Vérifier le contact entre ce cercle et les étoiles dans le ciel
-  for (int idx = 0 ; idx < listeEtoiles.size() ; idx++) {    
-    
-    //Lorsque qu'une étoile est attrapée :
-    if (listeEtoiles.get(idx).verifierSuperposition()) {
-      //La puissance de l'étoile est ajoutée au niveau de magie
-      jaugeMagie.niveau += listeEtoiles.get(idx).puissance;
-      if (jaugeMagie.niveau > 100)
-        jaugeMagie.niveau = 100;
-      //L'étoile est retirée de la collection
-      listeEtoiles.remove(idx);
-      //Son de l'étoile, joué en panoramique
-      if (mouseX >= 0 && mouseX <= dimensionX)
-        sonEtoile.pan(map(mouseX, 0, width, -1, 1));
-      else if (mouseX < 0)
-        sonEtoile.pan(-1);
-      else
-        sonEtoile.pan(1);
-      sonEtoile.play();
-    }
-  }
-}*/
-
-//Fonction appelée au lancement du programme pour générer les images de 
-//la séquence d'images des ennemis. Pour les 6 frame, l'images et le masques sont accédés,
-//le masque est appliqué à l'image et l'image est stockée.
-/*void genererImageEnnemi() {
-  //Nom des fichiers
-  String emplaImage = "images/ennemi/alien";
-  String emplaMasque = "images/ennemi/masque";
-  
-  //Stockage des images de chacun des frames avec masque
-  imgEnnemis = new PImage[6]; 
-
-  //Variable utilisée locales pour effectuer les manipuations
-  PImage image;
-  PImage masque;
-  
-  for (int idx = 0 ; idx < 6 ; idx++) {
-    //Accès aux fichiers
-    image = loadImage(emplaImage + nf(idx + 1, 2) + ".png");
-    masque = loadImage(emplaMasque + nf(idx + 1, 2) + ".png");
-    
-    //Création de l'image, copie et masquage
-    imgEnnemis[idx] = createImage(400, 400, ARGB);
-    imgEnnemis[idx] = image;
-    imgEnnemis[idx].mask(masque);
-  }
-}*/
-
-//Fonction permettant de créer la collection d'ennemis à l'initialisation du jeu.
-//Un nombre aléatoile d'ennemis (entre 1 et 3) est ajouté à la collection.
-/*void listerEnnemis() {
-  int nbEnnemis = int(random(1, 4));
-  listeEnnemis = new ArrayList<Ennemi>();
-
-  for (int idx = 0; idx < nbEnnemis ; idx++) {
-    //Instanciation de la classe Ennemi
-    Ennemi ennemi = new Ennemi();
-    //Ajout à la collection
-    listeEnnemis.add(ennemi);
-  }
-}*/
-
-//Fonction permettant d'afficher les ennemis de la collection
-/*void afficherEnnemis() { 
-  for (int idx = 0; idx < listeEnnemis.size() ; idx++) {
-    listeEnnemis.get(idx).render();
-  }
-}*/
-
-//Fonction permettant d'ajouter un ennemi à la collection
-/*void ajouterEnnemi() {
-  //Instanciation de l'objet Ennemi
-  Ennemi ennemi = new Ennemi();
-  //Ajout à la collection
-  listeEnnemis.add(ennemi);
-
-  //Feedback au joueur
-  teinterEcran();
-}*/
-
-//Fonction permettant la mise à jour en temps réel de la collection d'ennemis. 
-/*void updateEnnemis() {
-  for (int idx = 0 ; idx < listeEnnemis.size() ; idx++) {
-    //Mise à jour de la jauge de vie de chacun des ennemis
-    listeEnnemis.get(idx).jaugeVie.update();
-    //Mise à jour lorsque l'ennemi n'a plus de vie
-    if (listeEnnemis.get(idx).jaugeVie.niveauCourant <= 0) {
-      sonEnnemi.play();
-      listeEnnemis.remove(idx);
-      nbKills++;
-    }
-  }
-}*/
-
-//Fonction enclenchée lorsqu'une tentative d'attaque est faite alors que le niveau
-//de magie permet une attaque.
-/*void attaquer() {
-  //Emplacement de l'attaque
-  PVector position = new PVector(mouseX, mouseY);
-  
-  //Visuel de l'attaque
-  ellipseMode(CENTER);
-  noStroke();
-  float diametre = 25.0f;
-  float opacite = 255.0f;
-  while (diametre < diametreAttaqueMax) {
-    fill(255, opacite);
-    ellipse(position.x, position.y, diametre, diametre);
-    diametre += 25;
-    opacite -= 50;
-  }
-  
-  //Son
-  sonAttaque.play();
-  
-  //Jauge magie
-  jaugeMagie.niveau -= 10;
-  
-  //Vérifier les contacts avec chacun de ennemis de la collection
-  for (int idx = 0 ; idx < listeEnnemis.size(); idx++)
-    listeEnnemis.get(idx).verifierDegats(position.x, position.y);
-}*/
 
 //Fonction permettant la synthétisation de la musique ambiante pendant le jeu.
 void jouerMusique() {
@@ -724,4 +410,17 @@ void clicBouton() {
   
   //Son du bouton
   sonClic.play();
+}
+
+void afficherBaguette() {
+  
+  //Ajout de la traînée d'étoile
+  if (pressed)
+    psEtoile.update();
+  
+  //Afficher la baguette à l'endroit approprié
+  imageMode(CORNER);
+  image(imgBaguette, mouseX - imgBaguette.width + 45, mouseY - imgBaguette.height + 40);
+  
+
 }
