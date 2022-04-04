@@ -28,6 +28,14 @@ class ParticleEtoile extends ParticlePhysic {
     
     //Force de base déterminant l'intensité et la direction du déplacement de la particule.
     applyForce(random(-noise.x, noise.x), random(-noise.y, noise.y), 0.0f);
+    
+    if (position.x >= 0 && position.x <= dimensionX)
+      sonEtoile1.pan(map(position.x, 0, width, -1, 1));
+    else if (position.x < 0)
+      sonEtoile1.pan(-1);
+    else
+      sonEtoile1.pan(1);
+    sonEtoile1.play();
   }
   
   void update() {

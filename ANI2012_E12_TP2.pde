@@ -47,15 +47,12 @@ final int hauteurCockpit = 242;
 final int dimensionCadreFin = 400;
 SoundFile sonClic;
 
-//Étoiles
-SoundFile sonEtoile;
-
 //Baguette
 PImage imgBaguette;
 boolean isPSEtoileActive = false;
 ParticleSystem psEtoile;
 int psEtoileCompte = 500;
-
+SoundFile sonEtoile1, sonEtoile2;
 
 //Gestion du temps
 float tempsEcoule, tempsCourant;
@@ -117,14 +114,12 @@ void setup() {
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
   
   imgPremierPlan = loadImage("images/FORET_M1.png");
-  
-  //Étoiles
-  sonEtoile = new SoundFile(this, "audios/sonEtoileMono.mp3");
 
-  
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
   psEtoile = new ParticleSystem(psEtoileCompte, ParticleSystem.PARTICLE_TYPE_ETOILE);
+  sonEtoile1 = new SoundFile(this, "audios/sonEtoileMono.mp3");
+  sonEtoile2 = new SoundFile(this, "audios/sonAttaque.mp3");
     
   //Musique
   musique = new SinOsc(this);
