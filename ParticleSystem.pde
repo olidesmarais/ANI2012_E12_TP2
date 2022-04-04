@@ -140,9 +140,7 @@ class ParticleSystem
           recycle(particle);
         }
       }
-
-      // FFT est-ce vraiment nécessaire ?
-
+      
       // obtenir un itérateur pour la collection de particules actives
       iterator = particleActive.iterator();
 
@@ -175,6 +173,8 @@ class ParticleSystem
       print("particles system overload");
   }
 
+
+  //De nouvelles particules sont créées si la variable fournie en paramètre vaut true
   void updateEmitter(boolean creerNouvelle)
   {
     if (random(0.0f, 1.0f) < probabilitySpawn && creerNouvelle)

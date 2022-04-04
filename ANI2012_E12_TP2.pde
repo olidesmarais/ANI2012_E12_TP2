@@ -53,6 +53,7 @@ boolean isPSEtoileActive = false;
 ParticleSystem psEtoile;
 int psEtoileCompte = 500;
 SoundFile sonEtoile1, sonEtoile2;
+Vector3D pointeBaguette;
 
 //Gestion du temps
 float tempsEcoule, tempsCourant;
@@ -120,6 +121,7 @@ void setup() {
   psEtoile = new ParticleSystem(psEtoileCompte, ParticleSystem.PARTICLE_TYPE_ETOILE);
   sonEtoile1 = new SoundFile(this, "audios/sonEtoileMono.mp3");
   sonEtoile2 = new SoundFile(this, "audios/sonAttaque.mp3");
+  pointeBaguette = new Vector3D();
     
   //Musique
   musique = new SinOsc(this);
@@ -409,9 +411,19 @@ void clicBouton() {
 
 void afficherBaguette() {
   
-  //Ajout de la traînée d'étoile
-
+  //Identifier l'emplacement de la pointe de la baguette
+  pointeBaguette.set(mouseX - imgBaguette.width + 80, mouseY - imgBaguette.height + 70, 0.0f);
+  
+  //Update et affichage d'un système de particules en forme d'étoile à la pointe de la baguette. 
+  //De nouvelles particules ne sont créées que lorsque la souris est enfoncée.
   psEtoile.update(pressed);
+  
+  /*//Affichage d'un cerle autour de la baguette lorsque la souris est pressée
+  fill(255, 155);
+  noStroke();
+  ellipseMode(CENTER);
+  if(pressed)
+    ellipse(pointeBaguette.x, pointeBaguette.y, 20, 20);*/
   
   //Afficher la baguette à l'endroit approprié
   imageMode(CORNER);

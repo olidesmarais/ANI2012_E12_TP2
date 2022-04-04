@@ -6,7 +6,7 @@ class ParticleEtoile extends ParticlePhysic {
   ParticleEtoile() {
     super();
     
-    colorDiffuse = color(255);
+    colorDiffuse = color(255, 155);
     lifetime = 0.5f;
     
     mass = 1.0f;
@@ -24,11 +24,13 @@ class ParticleEtoile extends ParticlePhysic {
     super.init();
     
     //La position initiale de la particule correspond à la position de la souris.
-    position.set(mouseX - imgBaguette.width + 75, mouseY - imgBaguette.height + 70, 0.0f);
+    position.set(pointeBaguette.x, pointeBaguette.y, pointeBaguette.z);
     
     //Force de base déterminant l'intensité et la direction du déplacement de la particule.
     applyForce(random(-noise.x, noise.x), random(-noise.y, noise.y), 0.0f);
     
+    //Un son d'étoile se fait entendre à l'apparition d'une nouvelle ParticuleEtoile.
+    //Ce son est panoramique en fonction de la position de la souris sur l'axe des X.
     if (position.x >= 0 && position.x <= dimensionX)
       sonEtoile1.pan(map(position.x, 0, width, -1, 1));
     else if (position.x < 0)
@@ -97,6 +99,4 @@ class ParticleEtoile extends ParticlePhysic {
     //Fin de la forme
     endShape(CLOSE);
   }
-  
-  
 }
