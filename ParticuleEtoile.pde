@@ -31,6 +31,8 @@ class ParticleEtoile extends ParticlePhysic {
     
     //Un son d'étoile se fait entendre à l'apparition d'une nouvelle ParticuleEtoile.
     //Ce son est panoramique en fonction de la position de la souris sur l'axe des X.
+    sonEtoile1.amp(map(radius, 2.0f, 5.0f, 0.01f, 0.20f)); 
+    
     if (position.x >= 0 && position.x <= dimensionX)
       sonEtoile1.pan(map(position.x, 0, width, -1, 1));
     else if (position.x < 0)

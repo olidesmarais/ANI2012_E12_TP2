@@ -14,6 +14,8 @@ import processing.sound.*;
 
 import java.util.Iterator;
 
+import processing.video.*; // Dépendance: Video 2.0 | GStreamer-based video library for Processing.
+
 //Strcture canevas
 final int dimensionX = 1020;
 final int dimensionY = 720;
@@ -36,8 +38,9 @@ Bouton bCommencer;
 PImage imgAccueil;
 PImage imgBackground1, imgBackground2, imgBackground3;
 PImage imgPremierPlan;
-final int hauteurCockpit = 242;
-final int dimensionCadreFin = 400;
+Movie auroresBoreales;
+//final int hauteurCockpit = 242;
+//final int dimensionCadreFin = 400;
 SoundFile sonClic;
 
 //Baguette
@@ -99,6 +102,8 @@ void setup() {
   imgBackground2 = loadImage("images/LAYER02_BCKGRND.png");
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
   imgPremierPlan = loadImage("images/FORET_M1.png");
+  auroresBoreales = new Movie(this, "video/videoAurore_1.mp4");
+  auroresBoreales.loop();
 
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
@@ -263,10 +268,20 @@ void afficherJeu() {
   image(imgBackground1, 0, 0);
   image(imgPremierPlan, 0, 0);
   
+  auroresBoreales.play();
+  image(auroresBoreales, 0, 0);
+  
+  
   afficherBaguette();
 }
 
-void afficherFin() {
+void movieEvent(Movie movie)
+{
+  movie.read();
+  println("read()");
+}
+
+/*void afficherFin() {
   //L'arrière-plan de l'écran de fin est affiché dans la fonction transitionFin().
   //Il s'agit d'une copie du caneva au moment où le jeu prend fin. Cette image est
   //ensuite floutée puis affichée.
@@ -284,7 +299,7 @@ void afficherFin() {
   
   //Affichage du bouton pour rejouer
   //bRejouer.render();
-}
+}*/
 
 //Fonction permettant la synthétisation de la musique ambiante pendant le jeu.
 void jouerMusique() {
