@@ -106,7 +106,7 @@ class ParticleSystem
     timeLast= timeStart;
   }
 
-  void update()
+  void update(boolean creerNouvelle)
   {
     // mise à jour des variables en lien avec le temps
     timeNow = millis();
@@ -114,7 +114,7 @@ class ParticleSystem
     timeLast = timeNow;
 
     // mise à jour de l'émetteur de particules
-    updateEmitter();
+    updateEmitter(creerNouvelle);
 
     // nombre de particules actives
     activeParticleCount = particleActive.size();
@@ -156,7 +156,7 @@ class ParticleSystem
       }
     }
   }
-
+    
   void addParticule(float positionX, float positionY)
   {
     if (particleReady.size() > 0)
@@ -175,9 +175,9 @@ class ParticleSystem
       print("particles system overload");
   }
 
-  void updateEmitter()
+  void updateEmitter(boolean creerNouvelle)
   {
-    if (random(0.0f, 1.0f) < probabilitySpawn)
+    if (random(0.0f, 1.0f) < probabilitySpawn && creerNouvelle)
     {
       if (particleReady.size() > 0)
       {

@@ -410,8 +410,8 @@ void clicBouton() {
 void afficherBaguette() {
   
   //Ajout de la traînée d'étoile
-  if (pressed)
-    psEtoile.update();
+
+  psEtoile.update(pressed);
   
   //Afficher la baguette à l'endroit approprié
   imageMode(CORNER);
