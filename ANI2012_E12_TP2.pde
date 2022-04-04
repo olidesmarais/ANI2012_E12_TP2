@@ -263,13 +263,16 @@ void afficherAccueil() {
 void afficherJeu() {
   //Afficher le décor
   imageMode(CORNER);
+  auroresBoreales.play();
+  image(auroresBoreales, 0, -200);
+  tint(255, 220);
   image(imgBackground3, 0, 0);
+  tint(255, 255);
   image(imgBackground2, 0, 0);
   image(imgBackground1, 0, 0);
   image(imgPremierPlan, 0, 0);
   
-  auroresBoreales.play();
-  image(auroresBoreales, 0, 0);
+  
   
   
   afficherBaguette();
