@@ -7,15 +7,15 @@ class ParticleEtoile extends ParticlePhysic {
     super();
     
     colorDiffuse = color(255);
-    lifetime = 0.8f;
+    lifetime = 0.5f;
     
     mass = 1.0f;
-    speed = 5.0f;
-    speedMax = 10.0f;
+    speed = 100.0f;
+    speedMax = 100.0f;
     noise.set(5.0f, 5.0f, 0.0f);
     
     //Taille de la particule aléatoire
-    radius = random(5.0f, 10.0f);
+    radius = random(2.0f, 5.0f);
   }
   
   
@@ -34,7 +34,7 @@ class ParticleEtoile extends ParticlePhysic {
     
     //Calcul de la distance entre la particule et la pointe de la baguette
     float distanceSouris = dist(position.x, position.y, mouseX - imgBaguette.width + 75, mouseY - imgBaguette.height + 70);
-    float distanceMax = 100.0f;
+    float distanceMax = 200.0f;
     
     //Si la particule est trop loin de la souris, elle ne bouge pas.
     if (distanceSouris > distanceMax) {
