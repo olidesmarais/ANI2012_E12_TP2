@@ -36,7 +36,7 @@ Bouton bCommencer;
 
 //Environnement
 PImage imgAccueil;
-PImage imgBackground1, imgBackground2, imgBackground3;
+PImage imgBackground1, imgBackground2, imgBackground3, imgBackground4;
 PImage imgPremierPlan;
 Movie auroresBoreales;
 //final int hauteurCockpit = 242;
@@ -101,6 +101,7 @@ void setup() {
   imgBackground1 = loadImage("images/LAYER01_BCKGRND.png");
   imgBackground2 = loadImage("images/LAYER02_BCKGRND.png");
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
+  imgBackground4 = loadImage("images/LAYER04_BCKGRND.png");
   imgPremierPlan = loadImage("images/FORET_M1.png");
   auroresBoreales = new Movie(this, "video/videoAurore_1.mp4");
   auroresBoreales.loop();
@@ -195,7 +196,7 @@ void mouseReleased() {
 void keyReleased() {
   //Raccourci pour le slider jour-nuit (ESPACE)
   if (key == ' ') {
-    println("isPSEtoileActive : " + isPSEtoileActive);
+    
   }
   
   //Raccourci pour cliquer sur un bouton (ENTER)
@@ -265,9 +266,10 @@ void afficherJeu() {
   imageMode(CORNER);
   auroresBoreales.play();
   image(auroresBoreales, 0, -200);
-  tint(255, 220);
-  image(imgBackground3, 0, 0);
+  tint(255, 200);
+  image(imgBackground4, 0, 0);
   tint(255, 255);
+  image(imgBackground3, 0, 0);
   image(imgBackground2, 0, 0);
   image(imgBackground1, 0, 0);
   image(imgPremierPlan, 0, 0);
@@ -281,7 +283,6 @@ void afficherJeu() {
 void movieEvent(Movie movie)
 {
   movie.read();
-  println("read()");
 }
 
 /*void afficherFin() {
