@@ -1,10 +1,15 @@
 class Fee {
   //PVector position;
-  Vector3D position;
+  Vector3D position = new Vector3D();
   int hauteur, largeur;
   //float diametreContour;
   int type;
   PImage imgPapillon, imgFond;
+  float angleProportionFond;
+  //float angleTranslation;
+  Vector3D angleTranslation;
+  
+  
   //int puissance;
   
   Fee() {
@@ -21,9 +26,9 @@ class Fee {
     //les attributs associées au type sont accordées à l'étoile
     switch(type) {
       //Grande
-      case 0 :
-        largeur = 209;
-        hauteur = 214;
+      case 1 :
+        largeur = 136;
+        hauteur = 139;
         //puissance = 15;
         //diametreContour = 150;
         break;
@@ -44,11 +49,16 @@ class Fee {
     }
     //Copie de l'image de référence pour le bon type 
     imgPapillon = createImage(largeur, hauteur, ARGB);
-    imgPapillon.copy(feeRef[type], 0, 0, largeur, hauteur, 0, 0, largeur, hauteur);
+    imgPapillon.copy(feeRef[type], 0, 0, feeRef[type].width, feeRef[type].height, 0, 0, largeur, hauteur);
+    angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
+    
+    imgFond = createImage(largeur, hauteur, ARGB);
+    imgFond.copy(feeRef[0], 0, 0, feeRef[0].width, feeRef[0].height, 0, 0, largeur, hauteur);
+    angleProportionFond = 0.0f;
   }
   
   int determinerType() {
-   return 0;
+   return 1;
     /*float probabilite = random(10);
     
     //10% de chance d'avoir un grande étoile
@@ -67,7 +77,26 @@ class Fee {
   void render() {
     //Affichage de l'image associée à l'instance
     imageMode(CENTER);
-    image(imgPapillon, position.x, position.y);
+    
+    //Transformation de la fée
+    pushMatrix();
+    
+    //Déplacement du système de coordonnées à la position de la fée.
+    translate(position.x, position.y);
+    
+    translationFee();
+    
+    //Redimension de l'image de fond de la fée
+    pushMatrix();
+    scale(proportionFond());
+    image(imgFond, 0, 0);
+    popMatrix();
+    
+    
+    image(imgPapillon, 0, 0);
+    
+    popMatrix();
+    
   }
   
   boolean verifierSuperposition() {    
@@ -80,6 +109,33 @@ class Fee {
     return (distance <= diametreAttraperEtoile / 2 + diametreContour / 2);*/
     
     return false;
+  }
+  
+  float proportionFond() {
+    //Déterminer la proportion voulue
+    float proportion;
+    proportion = 1.5f + sin(radians(angleProportionFond)) * 0.5f;
+    
+    //Mise à jour de l'angle assiciée à l'intensité de la redimension 
+    angleProportionFond = (angleProportionFond + 5.0) % 360;
+    
+    //Retour de la valeur de proportion calculée
+    return proportion;
+  }
+  
+  void translationFee() {
+    
+    //Intensité de la translation en X et en Y
+    float translationX, translationY;
+    translationX = sin(radians(angleTranslation.x)) * 100;
+    translationY = sin(radians(angleTranslation.y)) * 50;
+    
+    //Mise à jour des angles assiciées à l'intensité de la translation 
+    angleTranslation.x = (angleTranslation.x + 3.0f) % 360;
+    angleTranslation.y = (angleTranslation.y + 6.0f) % 360;
+    
+    //Application de la translation
+    translate(translationX, translationY); // translationY);
   }
   
 }

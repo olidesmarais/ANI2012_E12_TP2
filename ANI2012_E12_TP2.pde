@@ -45,6 +45,7 @@ SoundFile sonClic;
 
 //Fées
 PImage[] feeRef;
+Fee fee1;
 
 //Baguette
 PImage imgBaguette;
@@ -113,7 +114,8 @@ void setup() {
   feeRef = new PImage[3];
   feeRef[0] = loadImage("images/fee/PAPILLON05.png");
   feeRef[1] = loadImage("images/fee/PAPILLON01.png");
-  feeRef[2] = loadImage("images/fee/PAPILLON03.png");
+  feeRef[2] = loadImage("images/fee/PAPILLON03.png"); 
+  fee1 = new Fee();
 
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
@@ -284,7 +286,7 @@ void afficherJeu() {
   image(imgPremierPlan, 0, 0);
   
   
-  
+  fee1.render();
   
   afficherBaguette();
 }
