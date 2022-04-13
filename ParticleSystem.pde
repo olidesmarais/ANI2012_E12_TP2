@@ -4,6 +4,7 @@
 class ParticleSystem
 {
   final static int PARTICLE_TYPE_ETOILE  = 1;
+  final static int PARTICLE_TYPE_BRUME   = 2;
   
   /*final static int PARTICLE_TYPE_NONE    = 0;
   final static int PARTICLE_TYPE_FIREFLY = 1;
@@ -90,11 +91,15 @@ class ParticleSystem
           probabilitySpawn = ParticleFlame.probabilitySpawn;
           break;*/
         case PARTICLE_TYPE_ETOILE:
-          particle = new ParticleEtoile();
-          probabilitySpawn = ParticleEtoile.probabilitySpawn;
+          particle = new ParticuleEtoile();
+          probabilitySpawn = ParticuleEtoile.probabilitySpawn;
+          break;
+        case PARTICLE_TYPE_BRUME:
+          particle = new ParticuleBrume();
+          probabilitySpawn = ParticuleBrume.probabilitySpawn;
           break;
       }
-
+      
       particle.ps = this;
       particle.position.copy(origin);
 
@@ -177,7 +182,7 @@ class ParticleSystem
   //De nouvelles particules sont créées si la variable fournie en paramètre vaut true
   void updateEmitter(boolean creerNouvelle)
   {
-    if (random(0.0f, 1.0f) < probabilitySpawn && creerNouvelle)
+    if (random(0.0f, 1.0f) < probabilitySpawn && creerNouvelle && particleReady.size() > 0)
     {
       if (particleReady.size() > 0)
       {

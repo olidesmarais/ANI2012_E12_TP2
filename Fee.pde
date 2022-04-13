@@ -4,13 +4,21 @@ class Fee {
   int hauteur, largeur;
   //float diametreContour;
   int type;
+  
+  
   PImage imgPapillon, imgFond;
+  
+  //Proportion
   float angleProportionFond;
-  //float angleTranslation;
+  
+  //Rotation
+  boolean attrapee;
+  float angleRotation;
+  
+  //Translation
+  Vector3D translationMax;
+  Vector3D translationCourante;
   Vector3D angleTranslation;
-  
-  
-  //int puissance;
   
   Fee() {
     //Position déterminée aléatoirement dans tout l'écran, sauf derrière let cockpit.
@@ -18,12 +26,11 @@ class Fee {
     //float posY = random(height - hauteurCockpit);
     position.set(centreX, centreY, 0); //new PVector(posX, posY);
     
-    //Détermination du type de l'étoie
-    //0-Grande 1-Petite 2-Ronde
+    //Détermination du type de fée
     type = determinerType();
     
     //En fonction du type déterminé aléatoirement selon les probabilités, 
-    //les attributs associées au type sont accordées à l'étoile
+    //les attributs associées au type sont accordées à la fée
     switch(type) {
       //Grande
       case 1 :
@@ -51,10 +58,15 @@ class Fee {
     imgPapillon = createImage(largeur, hauteur, ARGB);
     imgPapillon.copy(feeRef[type], 0, 0, feeRef[type].width, feeRef[type].height, 0, 0, largeur, hauteur);
     angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
+    translationMax = new Vector3D( 100.0f, 50.0f, 0.0f);
+    translationCourante = new Vector3D();
     
     imgFond = createImage(largeur, hauteur, ARGB);
     imgFond.copy(feeRef[0], 0, 0, feeRef[0].width, feeRef[0].height, 0, 0, largeur, hauteur);
     angleProportionFond = 0.0f;
+    
+    attrapee = false;
+    angleRotation = 0;
   }
   
   int determinerType() {
@@ -84,7 +96,8 @@ class Fee {
     //Déplacement du système de coordonnées à la position de la fée.
     translate(position.x, position.y);
     
-    translationFee();
+    translate(translationCourante.x, translationCourante.y);
+    rotate(angleRotation);
     
     //Redimension de l'image de fond de la fée
     pushMatrix();
@@ -99,15 +112,57 @@ class Fee {
     
   }
   
-  boolean verifierSuperposition() {    
-    /*//Pytagore pour déterminer la distance qui sépare le centre du cerlce de contour
-    //de l'étoile et l'emplacement du clic
-    float distance =  sqrt(sq(mouseX -position.x) + sq(mouseY - position.y));
-   
-    //On considère un contact lorsque la distance est inférieure ou égale au rayon
-    //de cercle de l'attaque plus le rayon du cercle de comptour de l'étoile
-    return (distance <= diametreAttraperEtoile / 2 + diametreContour / 2);*/
+  void update() {
     
+    if(verifierSuperposition() && pressed)
+      attrapee = true;
+    else if (!pressed)
+      attrapee = false;
+    
+    //Si la fée est attrapée, sa position devient celle de la pointe de la baguette, en conservant la translation courante.
+    if (attrapee) {
+      position.set(pointeBaguette.x - translationCourante.x, pointeBaguette.y - translationCourante.y, 0.0f);
+      
+      
+      
+    //Sinon, la translation se poursuit
+    } else
+      translationCourante.copy(translationFee());
+  }
+  
+  boolean verifierSuperposition() {    
+
+    //Vector3D emplacementActuel = new Vector3D();
+    Vector3D coinImgActuelActuel = new Vector3D();
+    Vector3D positionRelative = new Vector3D();
+    
+    //Position du coin de l'image de la fée
+    coinImgActuelActuel.copy(determinerCoinImgActuel());
+    
+    //Position relative de la pointe de la baguette sur l'image
+    positionRelative.set( pointeBaguette.x - coinImgActuelActuel.x, pointeBaguette.y - coinImgActuelActuel.y, 0);
+
+    
+    //Vérifier si la pointe de la baguette est dans le cadre de l'image
+    if (positionRelative.x >= 0 && positionRelative.x <= imgPapillon.width && positionRelative.y >= 0 && positionRelative.y <= imgPapillon.height) {      
+      
+      //Index du pixel de l'image touché
+      int idxPixel = imgPapillon.width * int(positionRelative.y) + int(positionRelative.x);
+      
+      //Charger l'image actuelle
+      imgPapillon.loadPixels();
+      
+      //Si le pixel est dans le cadre de l'image
+      if (idxPixel >= 0 && idxPixel < imgPapillon.pixels.length) {
+        
+        //On considère qu'il y a un contact si le pixel concerné n'est pas 
+        //complètement transparent
+        if (alpha(imgPapillon.pixels[idxPixel]) > alpha(0) ) {
+          return true;
+        } else
+          return false;
+      }
+    }
     return false;
   }
   
@@ -123,19 +178,38 @@ class Fee {
     return proportion;
   }
   
-  void translationFee() {
+  Vector3D translationFee() {
     
     //Intensité de la translation en X et en Y
-    float translationX, translationY;
-    translationX = sin(radians(angleTranslation.x)) * 100;
-    translationY = sin(radians(angleTranslation.y)) * 50;
+    Vector3D translationCourante = new Vector3D( sin(radians(angleTranslation.x)) * translationMax.x, sin(radians(angleTranslation.y)) * translationMax.y, 0.0f);
     
     //Mise à jour des angles assiciées à l'intensité de la translation 
     angleTranslation.x = (angleTranslation.x + 3.0f) % 360;
     angleTranslation.y = (angleTranslation.y + 6.0f) % 360;
     
     //Application de la translation
-    translate(translationX, translationY); // translationY);
+    //translate(translationX, translationY);
+    
+    return translationCourante;
   }
   
+  //Fonction retournant un Vector3D dont les propriétés indiquent la position courante de la fée, avec application de la translation.
+  Vector3D determinerPositioActuelle() {
+    Vector3D positionActuelle = new Vector3D( position.x + translationCourante.x, position.y + translationCourante.y, 0.0f);
+    return positionActuelle;
+  }
+  
+  Vector3D determinerCoinImgActuel() {
+    
+    Vector3D positionActuelle = new Vector3D();
+    Vector3D coinActuel = new Vector3D();
+    
+    //Déterminer la position courante de la fée, avec l'effet de translation
+    positionActuelle.copy(determinerPositioActuelle());
+    
+    //Déterminer et retourner l'emplacement du coin de l'image
+    coinActuel.set(positionActuelle.x - imgPapillon.width / 2, positionActuelle.y - imgPapillon.height / 2, 0);
+    
+    return coinActuel;
+  }
 }

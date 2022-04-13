@@ -39,6 +39,12 @@ PImage imgAccueil;
 PImage imgBackground1, imgBackground2, imgBackground3, imgBackground4;
 PImage imgPremierPlan;
 Movie auroresBoreales;
+
+            //couleur :  jaune    rose     bleu     vert
+color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
+int idxCouleurBrumeRef;
+ParticleSystem psBrume;
+
 //final int hauteurCockpit = 242;
 //final int dimensionCadreFin = 400;
 SoundFile sonClic;
@@ -49,7 +55,7 @@ Fee fee1;
 
 //Baguette
 PImage imgBaguette;
-boolean isPSEtoileActive = false;
+//boolean isPSEtoileActive = false;
 ParticleSystem psEtoile;
 int psEtoileCompte = 500;
 SoundFile sonEtoile1, sonEtoile2;
@@ -107,8 +113,11 @@ void setup() {
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
   imgBackground4 = loadImage("images/LAYER04_BCKGRND.png");
   imgPremierPlan = loadImage("images/FORET_M1.png");
-  auroresBoreales = new Movie(this, "video/videoAurore_1.mp4");
+  //auroresBoreales = new Movie(this, "video/videoAurore_1.mp4");
+  auroresBoreales = new Movie(this, "video/videoAurore_2.mp4");
   auroresBoreales.loop();
+  idxCouleurBrumeRef = int(random(couleursBrume.length));
+  psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
   //Fée
   feeRef = new PImage[3];
@@ -224,6 +233,9 @@ void keyReleased() {
     save("captures/capture" + nf(idxCapture, 2) + ".png");
     idxCapture++;
   }
+  
+  if (key == 't')
+    println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
 }
 
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
@@ -276,17 +288,22 @@ void afficherJeu() {
   //Afficher le décor
   imageMode(CORNER);
   auroresBoreales.play();
-  image(auroresBoreales, 0, -200);
-  tint(255, 200);
+  //image(auroresBoreales, 0, -300);
+  //tint(255, 200);
+  image(auroresBoreales, 0, -250);
+  tint(255, 150);
   image(imgBackground4, 0, 0);
   tint(255, 255);
   image(imgBackground3, 0, 0);
   image(imgBackground2, 0, 0);
+  psBrume.update(true);
   image(imgBackground1, 0, 0);
   image(imgPremierPlan, 0, 0);
   
   
+  fee1.update();
   fee1.render();
+  
   
   afficherBaguette();
 }

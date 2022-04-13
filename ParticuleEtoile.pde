@@ -1,9 +1,9 @@
-class ParticleEtoile extends ParticlePhysic {
+class ParticuleEtoile extends ParticlePhysic {
   
   final static float probabilitySpawn = 0.5f;
   float radius;
 
-  ParticleEtoile() {
+  ParticuleEtoile() {
     super();
     
     colorDiffuse = color(255, 155);
