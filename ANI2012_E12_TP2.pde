@@ -16,6 +16,8 @@ import java.util.Iterator;
 
 import processing.video.*; // Dépendance: Video 2.0 | GStreamer-based video library for Processing.
 
+import java.util.TreeMap;
+
 //Strcture canevas
 final int dimensionX = 1020;
 final int dimensionY = 720;
@@ -41,6 +43,9 @@ PImage imgPremierPlan;
 Movie auroresBoreales;
 SoundFile sonClic;
 
+//Animations
+Sequencer sequencer;
+
 //Brume
 int idxCouleurBrumeRef;
 ParticleSystem psBrume;
@@ -52,6 +57,8 @@ PImage[] feeRef;
 Fee fee1;
 PImage feeRefFond;
 PImage[] feeRefBleu, feeRefJaune, feeRefRose;
+AnimationClip clipFee;
+SoundFile sonFee;
 
 //Baguette
 PImage imgBaguette;
@@ -61,7 +68,8 @@ SoundFile sonEtoile1;
 Vector3D pointeBaguette;
 
 //Gestion du temps
-float tempsEcoule, tempsCourant;
+//float tempsEcoule, tempsCourant;
+float timeNow, timeLast, timeElapsed;
 
 //Musique
 SinOsc musique;
@@ -118,6 +126,8 @@ void setup() {
   idxCouleurBrumeRef = int(random(couleursBrume.length));
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
+  
+
   //Fée
   //Affichage
   feeRefFond = loadImage("images/fee/PAPILLON05.png");
@@ -126,6 +136,10 @@ void setup() {
   feeRefRose = remplirTabImgRef("rose");
   //Collection
   fee1 = new Fee();
+  //Animation
+  String[] tabCourbeFee = {"rotation"};
+  clipFee = new AnimationClip(tabCourbeFee);
+  sonFee = new SoundFile (this, "audios/sonFee.wav");
 
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
@@ -140,6 +154,11 @@ void setup() {
   idxNote = 0;
   musiqueOn = true;
   frequenceMusique = 0.5f;
+  
+  //Animations
+  sequencer = new Sequencer();
+  sequencer.clipFee = clipFee;
+  ajouterPosesCles();
 }
 
 void draw() {
@@ -154,14 +173,19 @@ void draw() {
     afficherJeu();
 
     //Gestion du temps
-    tempsEcoule = (millis() - tempsCourant) / 1000.0f;
-    delaiMusique += tempsEcoule;
-    tempsCourant = millis();
+    timeNow = millis();
+    timeElapsed = (timeNow - timeLast) / 1000.0f;
+    timeLast = timeNow;
+    
+    /*tempsEcoule = (millis() - tempsCourant) / 1000.0f;
+    
+    tempsCourant = millis();*/
       
     //Jouer la musique
     //La vitesse de la musique est directement proportionnelle avec le nombre
     //d'ennemis dans la collection d'ennemis
     //frequenceMusique = map(listeEnnemis.size(), 0, objectifDefaite, 0.2f, 0.1f);
+    delaiMusique += timeElapsed;
     if (delaiMusique > frequenceMusique) {
       //Option pour inactiver le son (Touche 'm')
       if (musiqueOn)
@@ -179,6 +203,12 @@ void mousePressed() {
   //À quelques endroits dans le programme, il est vérifié si la souris est pressée.
   //Cette variable est notée dans le boolean "pressed".
   pressed = true;
+  
+  if(fee1.verifierSuperposition() && pressed) {
+      fee1.attrapee = true;
+      sonFee.play();
+  }
+      
 }
 
 void mouseReleased() {
@@ -211,6 +241,9 @@ void mouseReleased() {
   
   //La souris n'est plus pressée
   pressed = false;
+  
+  fee1.attrapee = false;
+  fee1.timeLast = millis();
 }
 
 void keyReleased() {
@@ -238,13 +271,23 @@ void keyReleased() {
     println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
 }
 
+void ajouterPosesCles() {
+  //Fée
+  clipFee.curveCollection.get("rotation").addKeyframe( 0.0f, 0.0f);
+  clipFee.curveCollection.get("rotation").addKeyframe( 0.5f, radians(-80.0f));
+  clipFee.curveCollection.get("rotation").addKeyframe( 1.0f, 0.0f);
+}
+
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
 //à leur état initial
 void initialisation() {
   //Gestion du temps
-  tempsEcoule = 0.0f;
+  /*tempsEcoule = 0.0f;
   tempsCourant = 0.0f;
-  tempsCourant = millis();
+  tempsCourant = millis();*/
+  //Gestion du temps
+  timeNow = timeLast = millis();
+  timeElapsed = 0.0f;
   
   //Musique
   idxNote = 0;

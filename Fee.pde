@@ -23,6 +23,12 @@ class Fee {
   boolean attrapee;
   float angleRotation;
   
+  //Animation
+  float timeLast, timeNow, timeElapsed;
+  float timelinePlayhead, timelineDuration;
+  float delaiRire, frequenceRire;
+  
+  
   //Translation
   Vector3D translationMax;
   Vector3D translationCourante;
@@ -73,7 +79,13 @@ class Fee {
     angleProportionFond = 0.0f;
     
     attrapee = false;
-    angleRotation = 0;
+    angleRotation = 0.0f;
+    
+    //Animation
+    timelinePlayhead = 0.0f;
+    timelineDuration = 1.0f;
+    delaiRire = 0.0f;
+    frequenceRire = 2.0f;
   }
   
   int determinerType() {
@@ -98,11 +110,21 @@ class Fee {
     //Redimension de l'image de fond de la fée
     pushMatrix();
     scale(proportionFond());
+
     image(imgFond, 0, 0);
+
     popMatrix();
     
     //Affichage
-    image(tabImages[idxImageCourante], 0, 0);
+    
+    if (idxImageCourante == 1) {
+      tint(255, 100);
+      image(tabImages[idxImageCourante], 0, 0);
+      tint(255, 255);
+    } else {
+      image(tabImages[idxImageCourante], 0, 0);
+    }
+    
     
     popMatrix();
     
@@ -110,20 +132,42 @@ class Fee {
   
   void update() {
     
-    if(verifierSuperposition() && pressed)
+    /*if(verifierSuperposition() && pressed)
       attrapee = true;
     else if (!pressed)
-      attrapee = false;
+      attrapee = false;*/
     
     //Si la fée est attrapée, sa position devient celle de la pointe de la baguette, en conservant la translation courante.
     if (attrapee) {
       position.set(pointeBaguette.x - translationCourante.x, pointeBaguette.y - translationCourante.y, 0.0f);
       idxImageCourante = 0;
+   
+      timeNow = millis();
+      timeElapsed = (timeNow - timeLast) / 1000.0f;
+      timeLast = timeNow;
+      
+      timelinePlayhead += timeElapsed;
+      if (timelinePlayhead >= timelineDuration)
+        timelinePlayhead -= timelineDuration;
+        
+      sequencer.update("clipFee", timelinePlayhead);
+      angleRotation = sequencer.rotationFee;
+      
+      delaiRire += timeElapsed;
+      println("delai rire : " + delaiRire + "; frequence rire : " + frequenceRire);
+      if (delaiRire >= frequenceRire) {
+        sonFee.play();
+        println("play sonFee");
+        delaiRire -= delaiRire;
+      }
+      
     //Sinon, la translation se poursuit
     } else {
       translationCourante.copy(translationFee());
+      angleRotation = 0.0f;
       idxImageCourante = (idxImageCourante + 1) % 3;
     }
+    //println(angleRotation);
   }
   
   boolean verifierSuperposition() {    
