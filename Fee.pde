@@ -36,7 +36,6 @@ class Fee {
     
     //Détermination du type de fée
     type = determinerType();
-    println("type : " + type);
     
     //En fonction du type déterminé aléatoirement selon les probabilités, 
     //les attributs associées au type sont accordées à la fée
@@ -48,19 +47,16 @@ class Fee {
     switch(type) {
       case FEE_TYPE_BLEU :
         definirLesImages(feeRefBleu);
-        println("case bleu");
         //tabImages = feeRefBleu;
         break;
       case FEE_TYPE_ROSE :
         definirLesImages(feeRefRose);
         //tabImages[0] = createImage(dimension, dimension, ARGB);
         //tabImages[0].copy(feeRefRose[0], 0, 0, feeRefRose[0].width, feeRefRose[0].height, 0, 0, dimension, dimension);
-        println("case rose");
         //tabImages = feeRefRose;
         break;
       case FEE_TYPE_JAUNE :
         definirLesImages(feeRefJaune);
-        println("case jaune");
         //tabImages = feeRefJaune;
         break;
     }
@@ -131,7 +127,6 @@ class Fee {
     } else {
       translationCourante.copy(translationFee());
       idxImageCourante = (idxImageCourante + 1) % 3;
-      println("idx image : " + idxImageCourante);
       //imgPapillon.copy(tabImages[idxImageCourante]);
     }
   }
