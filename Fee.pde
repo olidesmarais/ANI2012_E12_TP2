@@ -1,12 +1,20 @@
 class Fee {
+  final static int FEE_TYPE_BLEU  = 0;
+  final static int FEE_TYPE_ROSE  = 1;
+  final static int FEE_TYPE_JAUNE = 2;
+  
   //PVector position;
   Vector3D position = new Vector3D();
-  int hauteur, largeur;
+  
+  //int hauteur, largeur;
+  int dimension;
+  
   //float diametreContour;
   int type;
   
-  
   PImage imgPapillon, imgFond;
+  PImage[] tabImages;
+  int idxImageCourante;
   
   //Proportion
   float angleProportionFond;
@@ -28,41 +36,48 @@ class Fee {
     
     //Détermination du type de fée
     type = determinerType();
+    println("type : " + type);
     
     //En fonction du type déterminé aléatoirement selon les probabilités, 
     //les attributs associées au type sont accordées à la fée
+    
+    tabImages = new PImage[3];
+    dimension = 100;
+    idxImageCourante = 0;
+    
     switch(type) {
-      //Grande
-      case 1 :
-        largeur = 136;
-        hauteur = 139;
-        //puissance = 15;
-        //diametreContour = 150;
+      case FEE_TYPE_BLEU :
+        definirLesImages(feeRefBleu);
+        println("case bleu");
+        //tabImages = feeRefBleu;
         break;
-      //Petite
-      /*case 1 :
-        largeur = 78;
-        hauteur = 80;
-        puissance = 10;
-        diametreContour = 55;
+      case FEE_TYPE_ROSE :
+        definirLesImages(feeRefRose);
+        //tabImages[0] = createImage(dimension, dimension, ARGB);
+        //tabImages[0].copy(feeRefRose[0], 0, 0, feeRefRose[0].width, feeRefRose[0].height, 0, 0, dimension, dimension);
+        println("case rose");
+        //tabImages = feeRefRose;
         break;
-      //Ronde
-      case 2 :
-        largeur = 70;
-        hauteur = 69;
-        puissance = 5;
-        diametreContour = 45;
-        break;*/
+      case FEE_TYPE_JAUNE :
+        definirLesImages(feeRefJaune);
+        println("case jaune");
+        //tabImages = feeRefJaune;
+        break;
     }
+    
+    
+    
+    
+    
     //Copie de l'image de référence pour le bon type 
-    imgPapillon = createImage(largeur, hauteur, ARGB);
-    imgPapillon.copy(feeRef[type], 0, 0, feeRef[type].width, feeRef[type].height, 0, 0, largeur, hauteur);
+    imgPapillon = createImage(dimension, dimension, ARGB);
+    //imgPapillon.copy(tabImages[idxImageCourante], 0, 0, tabImages[idxImageCourante].width, tabImages[idxImageCourante].height, 0, 0, dimension, dimension);
     angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
     translationMax = new Vector3D( 100.0f, 50.0f, 0.0f);
     translationCourante = new Vector3D();
     
-    imgFond = createImage(largeur, hauteur, ARGB);
-    imgFond.copy(feeRef[0], 0, 0, feeRef[0].width, feeRef[0].height, 0, 0, largeur, hauteur);
+    imgFond = createImage(dimension, dimension, ARGB);
+    imgFond.copy(feeRefFond, 0, 0, feeRefFond.width, feeRefFond.height, 0, 0, dimension, dimension);
     angleProportionFond = 0.0f;
     
     attrapee = false;
@@ -70,20 +85,8 @@ class Fee {
   }
   
   int determinerType() {
-   return 1;
-    /*float probabilite = random(10);
-    
-    //10% de chance d'avoir un grande étoile
-    if (probabilite > 9.0f)
-      return 0;
-    
-    //40% de chance d'avoir une petite étoile
-    else if (probabilite > 5.0)
-      return 1;
-    
-    //50% de chance d'avoir une étoile ronde
-    else
-      return 2;*/
+    return int(random(3));
+    //return 2;
   }
   
   void render() {
@@ -105,8 +108,9 @@ class Fee {
     image(imgFond, 0, 0);
     popMatrix();
     
-    
-    image(imgPapillon, 0, 0);
+    //image(imgPapillon, 0, 0);
+    image(tabImages[idxImageCourante], 0, 0);
+    //image(feeRefBleu[0], 0, 0);
     
     popMatrix();
     
@@ -123,11 +127,13 @@ class Fee {
     if (attrapee) {
       position.set(pointeBaguette.x - translationCourante.x, pointeBaguette.y - translationCourante.y, 0.0f);
       
-      
-      
     //Sinon, la translation se poursuit
-    } else
+    } else {
       translationCourante.copy(translationFee());
+      idxImageCourante = (idxImageCourante + 1) % 3;
+      println("idx image : " + idxImageCourante);
+      //imgPapillon.copy(tabImages[idxImageCourante]);
+    }
   }
   
   boolean verifierSuperposition() {    
@@ -141,23 +147,22 @@ class Fee {
     
     //Position relative de la pointe de la baguette sur l'image
     positionRelative.set( pointeBaguette.x - coinImgActuelActuel.x, pointeBaguette.y - coinImgActuelActuel.y, 0);
-
     
     //Vérifier si la pointe de la baguette est dans le cadre de l'image
-    if (positionRelative.x >= 0 && positionRelative.x <= imgPapillon.width && positionRelative.y >= 0 && positionRelative.y <= imgPapillon.height) {      
+    if (positionRelative.x >= 0 && positionRelative.x <= dimension && positionRelative.y >= 0 && positionRelative.y <= dimension) {      
       
       //Index du pixel de l'image touché
-      int idxPixel = imgPapillon.width * int(positionRelative.y) + int(positionRelative.x);
+      int idxPixel = dimension * int(positionRelative.y) + int(positionRelative.x);
       
       //Charger l'image actuelle
-      imgPapillon.loadPixels();
+      tabImages[idxImageCourante].loadPixels();
       
       //Si le pixel est dans le cadre de l'image
-      if (idxPixel >= 0 && idxPixel < imgPapillon.pixels.length) {
+      if (idxPixel >= 0 && idxPixel < tabImages[idxImageCourante].pixels.length) {
         
         //On considère qu'il y a un contact si le pixel concerné n'est pas 
         //complètement transparent
-        if (alpha(imgPapillon.pixels[idxPixel]) > alpha(0) ) {
+        if (alpha(tabImages[idxImageCourante].pixels[idxPixel]) > alpha(0) ) {
           return true;
         } else
           return false;
@@ -187,9 +192,6 @@ class Fee {
     angleTranslation.x = (angleTranslation.x + 3.0f) % 360;
     angleTranslation.y = (angleTranslation.y + 6.0f) % 360;
     
-    //Application de la translation
-    //translate(translationX, translationY);
-    
     return translationCourante;
   }
   
@@ -211,5 +213,25 @@ class Fee {
     coinActuel.set(positionActuelle.x - imgPapillon.width / 2, positionActuelle.y - imgPapillon.height / 2, 0);
     
     return coinActuel;
+  }
+  
+  
+  //Fonction permettant de copier les images de fée de la couleur appropriée dans le tableau d'image de l'instance de fée. 
+  //La taille de ces images est adaptée en fonction de la dimension de la fée.
+  void definirLesImages(PImage[] tabImgRef) {
+    
+    println("definirLesImage");
+    println("taille tabImgRef : " + tabImgRef.length);
+    
+    //image(tabImgRef[0], centreX, centreY);
+    
+    //tabImages = new PImage[3];
+    
+    for (int idx = 0 ; idx < 3 ; idx++) {
+      
+      tabImages[idx] = createImage(dimension, dimension, ARGB);
+      tabImages[idx].copy(tabImgRef[idx], 0, 0, tabImgRef[idx].width, tabImgRef[idx].height, 0, 0, dimension, dimension);
+    }
+    
   }
 }

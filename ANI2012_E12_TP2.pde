@@ -39,19 +39,21 @@ PImage imgAccueil;
 PImage imgBackground1, imgBackground2, imgBackground3, imgBackground4;
 PImage imgPremierPlan;
 Movie auroresBoreales;
+SoundFile sonClic;
 
-            //couleur :  jaune    rose     bleu     vert
-color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
+//Brume
 int idxCouleurBrumeRef;
 ParticleSystem psBrume;
-
-//final int hauteurCockpit = 242;
-//final int dimensionCadreFin = 400;
-SoundFile sonClic;
+            //couleur :  jaune    rose     bleu     vert
+color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
 
 //Fées
 PImage[] feeRef;
 Fee fee1;
+
+PImage feeRefFond;
+PImage[] feeRefBleu, feeRefJaune, feeRefRose;
+
 
 //Baguette
 PImage imgBaguette;
@@ -120,6 +122,11 @@ void setup() {
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
   //Fée
+  feeRefFond = loadImage("images/fee/PAPILLON05.png");
+  feeRefBleu = remplirTabImgRef("bleu");
+  feeRefJaune = remplirTabImgRef("jaune");
+  feeRefRose = remplirTabImgRef("rose");
+  //Image fée
   feeRef = new PImage[3];
   feeRef[0] = loadImage("images/fee/PAPILLON05.png");
   feeRef[1] = loadImage("images/fee/PAPILLON01.png");
@@ -288,8 +295,6 @@ void afficherJeu() {
   //Afficher le décor
   imageMode(CORNER);
   auroresBoreales.play();
-  //image(auroresBoreales, 0, -300);
-  //tint(255, 200);
   image(auroresBoreales, 0, -250);
   tint(255, 150);
   image(imgBackground4, 0, 0);
@@ -364,22 +369,28 @@ void clicBouton() {
 void afficherBaguette() {
   
   //Identifier l'emplacement de la pointe de la baguette
-  pointeBaguette.set(mouseX - imgBaguette.width + 80, mouseY - imgBaguette.height + 70, 0.0f);
+  pointeBaguette.set(mouseX - imgBaguette.width / 2 + 40.0f, mouseY - imgBaguette.height / 2 + 35.0f, 0.0f);
   
   //Update et affichage d'un système de particules en forme d'étoile à la pointe de la baguette. 
   //De nouvelles particules ne sont créées que lorsque la souris est enfoncée.
   psEtoile.update(pressed);
   
-  /*//Affichage d'un cerle autour de la baguette lorsque la souris est pressée
-  fill(255, 155);
-  noStroke();
-  ellipseMode(CENTER);
-  if(pressed)
-    ellipse(pointeBaguette.x, pointeBaguette.y, 20, 20);*/
-  
   //Afficher la baguette à l'endroit approprié
   imageMode(CORNER);
-  image(imgBaguette, mouseX - imgBaguette.width + 45, mouseY - imgBaguette.height + 40);
+  image(imgBaguette, mouseX - imgBaguette.width / 2 + 22.5f, mouseY - imgBaguette.height / 2 + 20.0f, imgBaguette.width / 2, imgBaguette.height / 2);
   
+}
 
+PImage[] remplirTabImgRef( String couleurType) {
+  
+  //Création du tableau d'images de référence
+  PImage[] tabImgRef = new PImage[3];
+  
+  //Chargement et ajout des images dans le tableau
+  for (int idx = 0 ; idx < 3 ; idx++) {
+    tabImgRef[idx] = loadImage("images/fee/" + couleurType + "/" + idx + ".png");
+  }  
+  
+  //Retour du tableau
+  return tabImgRef;
 }
