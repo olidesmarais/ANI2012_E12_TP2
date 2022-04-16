@@ -101,8 +101,8 @@ void setup() {
   sonClic = new SoundFile(this, "audios/sonClic.wav");
   
   //Polices
-  policeTitre  = loadFont("polices/Origicide-48.vlw");
-  policeTexte  = loadFont("polices/AvenirLTStd-Book-48.vlw");
+  policeTitre  = loadFont("polices/Luminari-Regular-48.vlw");
+  policeTexte  = loadFont("polices/TimesNewRomanPSMT-48.vlw");
   policeBouton = loadFont("polices/AvenirLTStd-Heavy-48.vlw");
   
   //Début du jeu
