@@ -50,14 +50,12 @@ color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
 //Fées
 PImage[] feeRef;
 Fee fee1;
-
 PImage feeRefFond;
 PImage[] feeRefBleu, feeRefJaune, feeRefRose;
 
 
 //Baguette
 PImage imgBaguette;
-//boolean isPSEtoileActive = false;
 ParticleSystem psEtoile;
 int psEtoileCompte = 500;
 SoundFile sonEtoile1, sonEtoile2;
@@ -349,7 +347,8 @@ void afficherJeu() {
 
 void movieEvent(Movie movie)
 {
-  movie.read();
+  if (movie.available())
+    movie.read();
 }
 
 /*void afficherFin() {

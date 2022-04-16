@@ -61,10 +61,6 @@ class Fee {
         break;
     }
     
-    
-    
-    
-    
     //Copie de l'image de référence pour le bon type 
     imgPapillon = createImage(dimension, dimension, ARGB);
     //imgPapillon.copy(tabImages[idxImageCourante], 0, 0, tabImages[idxImageCourante].width, tabImages[idxImageCourante].height, 0, 0, dimension, dimension);
@@ -95,6 +91,7 @@ class Fee {
     //Déplacement du système de coordonnées à la position de la fée.
     translate(position.x, position.y);
     
+    //Translation et rotation courantes
     translate(translationCourante.x, translationCourante.y);
     rotate(angleRotation);
     
@@ -104,9 +101,8 @@ class Fee {
     image(imgFond, 0, 0);
     popMatrix();
     
-    //image(imgPapillon, 0, 0);
+    //Affichage
     image(tabImages[idxImageCourante], 0, 0);
-    //image(feeRefBleu[0], 0, 0);
     
     popMatrix();
     
@@ -122,12 +118,11 @@ class Fee {
     //Si la fée est attrapée, sa position devient celle de la pointe de la baguette, en conservant la translation courante.
     if (attrapee) {
       position.set(pointeBaguette.x - translationCourante.x, pointeBaguette.y - translationCourante.y, 0.0f);
-      
+      idxImageCourante = 0;
     //Sinon, la translation se poursuit
     } else {
       translationCourante.copy(translationFee());
       idxImageCourante = (idxImageCourante + 1) % 3;
-      //imgPapillon.copy(tabImages[idxImageCourante]);
     }
   }
   
@@ -179,7 +174,6 @@ class Fee {
   }
   
   Vector3D translationFee() {
-    
     //Intensité de la translation en X et en Y
     Vector3D translationCourante = new Vector3D( sin(radians(angleTranslation.x)) * translationMax.x, sin(radians(angleTranslation.y)) * translationMax.y, 0.0f);
     
@@ -190,14 +184,14 @@ class Fee {
     return translationCourante;
   }
   
-  //Fonction retournant un Vector3D dont les propriétés indiquent la position courante de la fée, avec application de la translation.
+  //Fonction retournant un Vector3D dont les propriétés indiquent la position courante de la fée, avec application de la translation courante.
   Vector3D determinerPositioActuelle() {
     Vector3D positionActuelle = new Vector3D( position.x + translationCourante.x, position.y + translationCourante.y, 0.0f);
     return positionActuelle;
   }
   
+  //Fonction déterminant et retournant la position correspondant au coin supérieur droit de l'image de référence.
   Vector3D determinerCoinImgActuel() {
-    
     Vector3D positionActuelle = new Vector3D();
     Vector3D coinActuel = new Vector3D();
     
@@ -211,19 +205,10 @@ class Fee {
   }
   
   
-  //Fonction permettant de copier les images de fée de la couleur appropriée dans le tableau d'image de l'instance de fée. 
-  //La taille de ces images est adaptée en fonction de la dimension de la fée.
+  //Fonction permettant de copier les images de fée de référence en fonction de la couleur appropriée dans le tableau d'image 
+  //de l'instance de fée. La taille de ces images est adaptée en fonction de la dimension de la fée.
   void definirLesImages(PImage[] tabImgRef) {
-    
-    println("definirLesImage");
-    println("taille tabImgRef : " + tabImgRef.length);
-    
-    //image(tabImgRef[0], centreX, centreY);
-    
-    //tabImages = new PImage[3];
-    
     for (int idx = 0 ; idx < 3 ; idx++) {
-      
       tabImages[idx] = createImage(dimension, dimension, ARGB);
       tabImages[idx].copy(tabImgRef[idx], 0, 0, tabImgRef[idx].width, tabImgRef[idx].height, 0, 0, dimension, dimension);
     }
