@@ -53,12 +53,11 @@ Fee fee1;
 PImage feeRefFond;
 PImage[] feeRefBleu, feeRefJaune, feeRefRose;
 
-
 //Baguette
 PImage imgBaguette;
 ParticleSystem psEtoile;
 int psEtoileCompte = 500;
-SoundFile sonEtoile1, sonEtoile2;
+SoundFile sonEtoile1;
 Vector3D pointeBaguette;
 
 //Gestion du temps
@@ -120,22 +119,18 @@ void setup() {
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
   //Fée
+  //Affichage
   feeRefFond = loadImage("images/fee/PAPILLON05.png");
   feeRefBleu = remplirTabImgRef("bleu");
   feeRefJaune = remplirTabImgRef("jaune");
   feeRefRose = remplirTabImgRef("rose");
-  //Image fée
-  feeRef = new PImage[3];
-  feeRef[0] = loadImage("images/fee/PAPILLON05.png");
-  feeRef[1] = loadImage("images/fee/PAPILLON01.png");
-  feeRef[2] = loadImage("images/fee/PAPILLON03.png"); 
+  //Collection
   fee1 = new Fee();
 
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
   psEtoile = new ParticleSystem(psEtoileCompte, ParticleSystem.PARTICLE_TYPE_ETOILE);
   sonEtoile1 = new SoundFile(this, "audios/sonEtoileMono.mp3");
-  sonEtoile2 = new SoundFile(this, "audios/sonAttaque.mp3");
   pointeBaguette = new Vector3D();
     
   //Musique
