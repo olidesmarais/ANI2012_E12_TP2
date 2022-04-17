@@ -10,7 +10,6 @@ class AnimationClip {
     //Ajout des courbes d'animation au dictionnaire
     for (String nomCourbe : tabCourbesAnimation) {
       curveCollection.put(nomCourbe, new AnimationCurve(nomCourbe));
-      println("ajout courbe : " + nomCourbe);
     }
   }
 }

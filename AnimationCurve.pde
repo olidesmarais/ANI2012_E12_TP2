@@ -11,6 +11,5 @@ class AnimationCurve {
   
   void addKeyframe( float keyframeTimestamp, float keyframeValue) {
     keyframeCollection.put(keyframeTimestamp, new Keyframe(keyframeTimestamp, keyframeValue));
-    println("keyframeValue : " + keyframeValue);
   }
 }

@@ -53,8 +53,10 @@ ParticleSystem psBrume;
 color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
 
 //Fées
-PImage[] feeRef;
-Fee fee1;
+//PImage[] feeRef;
+int nbFees = 5;
+//Fee fee1;
+Fee[] tabFees;
 PImage feeRefFond;
 PImage[] feeRefBleu, feeRefJaune, feeRefRose;
 AnimationClip clipFee;
@@ -135,7 +137,11 @@ void setup() {
   feeRefJaune = remplirTabImgRef("jaune");
   feeRefRose = remplirTabImgRef("rose");
   //Collection
-  fee1 = new Fee();
+  tabFees = new Fee[nbFees];
+  for (int idx = 0 ; idx < nbFees ; idx++)
+    tabFees[idx] = new Fee();
+   //fee1 = new Fee();
+   
   //Animation
   String[] tabCourbeFee = {"rotation"};
   clipFee = new AnimationClip(tabCourbeFee);
@@ -204,9 +210,11 @@ void mousePressed() {
   //Cette variable est notée dans le boolean "pressed".
   pressed = true;
   
-  if(fee1.verifierSuperposition() && pressed) {
-      fee1.attrapee = true;
-      sonFee.play();
+  for (Fee fee : tabFees) {
+    if(fee.verifierSuperposition() && pressed) {
+        fee.attrapee = true;
+        fee.timeLast = millis();
+    }
   }
       
 }
@@ -242,8 +250,9 @@ void mouseReleased() {
   //La souris n'est plus pressée
   pressed = false;
   
-  fee1.attrapee = false;
-  fee1.timeLast = millis();
+  for (Fee fee : tabFees)
+    fee.attrapee = false;
+  //fee1.timeLast = millis();
 }
 
 void keyReleased() {
@@ -267,8 +276,9 @@ void keyReleased() {
     idxCapture++;
   }
   
-  if (key == 't')
-    println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
+  //Test
+  //if (key == 't')
+    //println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
 }
 
 void ajouterPosesCles() {
@@ -376,8 +386,10 @@ void afficherJeu() {
   image(imgPremierPlan, 0, 0);
   
   
-  fee1.update();
-  fee1.render();
+  for (Fee fee : tabFees) {
+    fee.update();
+    fee.render();
+  }
   
   
   afficherBaguette();

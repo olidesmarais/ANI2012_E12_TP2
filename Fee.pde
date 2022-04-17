@@ -33,12 +33,19 @@ class Fee {
   Vector3D translationMax;
   Vector3D translationCourante;
   Vector3D angleTranslation;
+  float deltaAngleTranslation;
   
   Fee() {
+    angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
+    translationMax = new Vector3D( random(10.0f, 100.0f), random(5.0, 50.0f), 0.0f);
+    translationCourante = new Vector3D();
+    deltaAngleTranslation = random(8);
+    
+    
     //Position déterminée aléatoirement dans tout l'écran, sauf derrière let cockpit.
     //float posX = random(width);
     //float posY = random(height - hauteurCockpit);
-    position.set(centreX, centreY, 0); //new PVector(posX, posY);
+    position.set(random(100, width - 100), random(200, height - 200.0), 0); //new PVector(posX, posY);
     
     //Détermination du type de fée
     type = determinerType();
@@ -53,26 +60,19 @@ class Fee {
     switch(type) {
       case FEE_TYPE_BLEU :
         definirLesImages(feeRefBleu);
-        //tabImages = feeRefBleu;
         break;
       case FEE_TYPE_ROSE :
         definirLesImages(feeRefRose);
-        //tabImages[0] = createImage(dimension, dimension, ARGB);
-        //tabImages[0].copy(feeRefRose[0], 0, 0, feeRefRose[0].width, feeRefRose[0].height, 0, 0, dimension, dimension);
-        //tabImages = feeRefRose;
         break;
       case FEE_TYPE_JAUNE :
         definirLesImages(feeRefJaune);
-        //tabImages = feeRefJaune;
         break;
     }
     
     //Copie de l'image de référence pour le bon type 
     imgPapillon = createImage(dimension, dimension, ARGB);
     //imgPapillon.copy(tabImages[idxImageCourante], 0, 0, tabImages[idxImageCourante].width, tabImages[idxImageCourante].height, 0, 0, dimension, dimension);
-    angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
-    translationMax = new Vector3D( 100.0f, 50.0f, 0.0f);
-    translationCourante = new Vector3D();
+    
     
     imgFond = createImage(dimension, dimension, ARGB);
     imgFond.copy(feeRefFond, 0, 0, feeRefFond.width, feeRefFond.height, 0, 0, dimension, dimension);
@@ -154,10 +154,8 @@ class Fee {
       angleRotation = sequencer.rotationFee;
       
       delaiRire += timeElapsed;
-      println("delai rire : " + delaiRire + "; frequence rire : " + frequenceRire);
       if (delaiRire >= frequenceRire) {
         sonFee.play();
-        println("play sonFee");
         delaiRire -= delaiRire;
       }
       
@@ -222,8 +220,8 @@ class Fee {
     Vector3D translationCourante = new Vector3D( sin(radians(angleTranslation.x)) * translationMax.x, sin(radians(angleTranslation.y)) * translationMax.y, 0.0f);
     
     //Mise à jour des angles assiciées à l'intensité de la translation 
-    angleTranslation.x = (angleTranslation.x + 3.0f) % 360;
-    angleTranslation.y = (angleTranslation.y + 6.0f) % 360;
+    angleTranslation.x = (angleTranslation.x + deltaAngleTranslation) % 360;
+    angleTranslation.y = (angleTranslation.y + 2 * deltaAngleTranslation) % 360;
     
     return translationCourante;
   }
