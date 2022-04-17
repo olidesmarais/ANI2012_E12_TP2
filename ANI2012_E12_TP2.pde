@@ -54,7 +54,7 @@ color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
 
 //Fées
 //PImage[] feeRef;
-int nbFees = 5;
+int nbFees = 8;
 //Fee fee1;
 Fee[] tabFees;
 PImage feeRefFond;
@@ -383,7 +383,7 @@ void afficherJeu() {
   image(imgBackground2, 0, 0);
   psBrume.update(true);
   image(imgBackground1, 0, 0);
-  image(imgPremierPlan, 0, 0);
+  
   
   
   for (Fee fee : tabFees) {
@@ -391,6 +391,8 @@ void afficherJeu() {
     fee.render();
   }
   
+  imageMode(CORNER);
+  image(imgPremierPlan, 0, 0);
   
   afficherBaguette();
 }

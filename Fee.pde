@@ -37,15 +37,17 @@ class Fee {
   
   Fee() {
     angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
-    translationMax = new Vector3D( random(10.0f, 100.0f), random(5.0, 50.0f), 0.0f);
+    translationMax = new Vector3D( random(25.0f, 100.0f), random(5.0, 50.0f), 0.0f);
     translationCourante = new Vector3D();
-    deltaAngleTranslation = random(8);
-    
+    deltaAngleTranslation = random(2, 8);
+     float hasard = random(1);
+     if (hasard >= 5.0f)
+       deltaAngleTranslation *= -1;
     
     //Position déterminée aléatoirement dans tout l'écran, sauf derrière let cockpit.
     //float posX = random(width);
     //float posY = random(height - hauteurCockpit);
-    position.set(random(100, width - 100), random(200, height - 200.0), 0); //new PVector(posX, posY);
+    position.set(random(200, width - 200), random(500, height - 200.0), 0); //new PVector(posX, posY);
     
     //Détermination du type de fée
     type = determinerType();
