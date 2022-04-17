@@ -351,14 +351,13 @@ void afficherAccueil() {
   //Affichage des instructions
   fill(255);
   textFont(policeTexte, 18);
-  String[] lignesTexte = new String[5];
-  lignesTexte[0] = "Tentez de vaincre les envahisseurs en cliquant sur eux";
-  lignesTexte[1] = "avant qu'ils soient trop nombeux ! Afin d'avoir assez";
-  lignesTexte[2] = "de magie pour attaquer, alternez entre le jour et la nuit et";
-  lignesTexte[3] = "attrapez des étoiles. Il faut cependant faire vite, car ces";
-  lignesTexte[4] = "extra-terresetres se multiplient à la vitesse de la lumières !";
+  String[] lignesTexte = new String[4];
+  lignesTexte[0] = "Vous devez, à l'aide d'une baguette magique, attraper les différentes fées ";
+  lignesTexte[1] = "qui volent devant vous. Vous pouvez également interagir avec les animaux ";
+  lignesTexte[2] = "et entendre leurs cris. Cliquez partout et découvrez les plus grands secrets ";
+  lignesTexte[3] = "qui se cachent au cœur de la forêt.";
   //Emplacement de chacune des lignes
-  float posY = 325;  
+  float posY = 340;  
   int hauteurLigne = 20;
   //Affichage de chacune des lignes
   for (int ligne = 0 ; ligne < lignesTexte.length ; ligne++) {
