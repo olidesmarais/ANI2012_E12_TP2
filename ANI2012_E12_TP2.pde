@@ -41,6 +41,12 @@ PImage imgPremierPlan;
 Movie auroresBoreales;
 SoundFile sonClic;
 
+//Arbre
+float angle;
+int depthCurrent;
+int depthMax;
+boolean isKeyPressedLeft,isKeyPressedRight;
+
 //Brume
 int idxCouleurBrumeRef;
 ParticleSystem psBrume;
@@ -59,6 +65,7 @@ ParticleSystem psEtoile;
 int psEtoileCompte = 500;
 SoundFile sonEtoile1;
 Vector3D pointeBaguette;
+
 
 //Gestion du temps
 float tempsEcoule, tempsCourant;
@@ -117,6 +124,14 @@ void setup() {
   auroresBoreales.loop();
   idxCouleurBrumeRef = int(random(couleursBrume.length));
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
+  
+  //Arbre
+  angle = PI / 6.0f;
+  depthCurrent = 5;
+  depthMax = 8;
+  isKeyPressedLeft = false;
+  isKeyPressedRight = false;
+
 
   //Fée
   //Affichage
@@ -219,6 +234,24 @@ void keyReleased() {
     
   }
   
+  if (keyCode == LEFT)
+    isKeyPressedLeft = false;
+    
+  if (keyCode == RIGHT)
+    isKeyPressedRight = false;
+    
+  if (keyCode == UP)
+  {
+    depthCurrent = ++depthCurrent < depthMax ? depthCurrent : depthMax;
+    println("current depth : " + depthCurrent);
+  }
+  
+  if (keyCode == DOWN)
+  {
+    depthCurrent = --depthCurrent > 0 ? depthCurrent : 0;
+    println("current depth : " + depthCurrent);
+  }
+  
   //Raccourci pour cliquer sur un bouton (ENTER)
   if (keyCode == ENTER) {
     clicBouton();
@@ -237,6 +270,15 @@ void keyReleased() {
   if (key == 't')
     println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
 }
+
+void keyPressed()
+{
+  if (keyCode == LEFT)
+    isKeyPressedLeft = true;
+  if (keyCode == RIGHT)
+    isKeyPressedRight = true;
+}
+
 
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
 //à leur état initial
@@ -313,12 +355,20 @@ void afficherAccueil() {
     posY += hauteurLigne;
   }
   
+
+  
+  
+  
   //Afficage du bouton pour commencer
   bCommencer.render();
+  
+    //Afficher arbre
+  afficherArbre();
 }
   
 
 void afficherJeu() {
+  noStroke();
   //Afficher le décor
   imageMode(CORNER);
   auroresBoreales.play();
@@ -421,4 +471,74 @@ PImage[] remplirTabImgRef( String couleurType) {
   
   //Retour du tableau
   return tabImgRef;
+}
+
+void afficherArbre() {
+  //int depthCurrent = 5;
+  //int depthMax = 8;
+  //float angle = PI / 6.0f;
+  float theta = PI / 128.0f;
+  //boolean isRandomized = false;
+  // variables
+  int seed;
+  //float factor;
+  
+  seed = millis();
+  stroke(255,71,138);
+  strokeWeight(3);
+  fill(255,71,138);
+  
+  // valeur initiale de la séquence de nombres pseudo-aléatoires
+  randomSeed(seed);
+
+  // position initiale
+  translate(width / 5.0f, height);
+  
+   // appel de la fonction récursive qui dessine chacune des branches de l'arbre
+  tree(height / 7.0f, 0);
+
+  // modifier l'angle interactivement
+  if (isKeyPressedLeft)
+    angle -= theta;
+  if (isKeyPressedRight)
+    angle += theta;
+}
+
+void tree(float segment, int level)
+{
+  //float factor = isRandomized == true ? random(0.5f, 1.25f) : 1.0f;
+
+  // dessiner la branche
+  line(0, 0, 0, -segment);
+
+  // déplacer l'origine au bout de la branche
+  translate(0, -segment);
+
+  // appliquer le facteur de décroissance de la taille
+  segment *= 0.66f;
+
+  // incrémenter le nombre de niveaux
+  ++level;
+
+  // valider la condition d'arrêt
+  if (level < depthCurrent)
+  {
+    //factor = isRandomized == true ? random(0.5f, 1.5f) : 1.0f;
+
+    // dessiner la branche de droite
+    pushMatrix();
+    rotate(angle);
+    tree(segment, level);
+    popMatrix();
+
+    // ajouter optionnellement un peu de hasard au niveau de la rotation
+   // factor = isRandomized == true ? random(0.5f, 1.5f) : 1.0f;
+
+    // dessiner la branche de gauche
+    pushMatrix();
+    rotate(-angle);
+    tree(segment,level);
+    popMatrix();
+
+  }
 }
