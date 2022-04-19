@@ -15,6 +15,7 @@ class Fee {
   PImage imgPapillon, imgFond;
   PImage[] tabImages;
   int idxImageCourante;
+  int couleurTeinte;
   
   //Proportion
   float angleProportionFond;
@@ -28,7 +29,6 @@ class Fee {
   float timelinePlayhead, timelineDuration;
   float delaiRire, frequenceRire;
   
-  
   //Translation
   Vector3D translationMax;
   Vector3D translationCourante;
@@ -38,16 +38,14 @@ class Fee {
   Fee() {
     angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
     translationMax = new Vector3D( random(25.0f, 100.0f), random(5.0, 50.0f), 0.0f);
-    translationCourante = new Vector3D();
+    translationCourante = new Vector3D(random(360), random(360), 0.0f);
     deltaAngleTranslation = random(2, 8);
-     float hasard = random(1);
-     if (hasard >= 5.0f)
-       deltaAngleTranslation *= -1;
+    float hasard = random(1);
+    if (hasard >= 5.0f)
+      deltaAngleTranslation *= -1;
     
-    //Position déterminée aléatoirement dans tout l'écran, sauf derrière let cockpit.
-    //float posX = random(width);
-    //float posY = random(height - hauteurCockpit);
-    position.set(random(200, width - 200), random(500, height - 200.0), 0); //new PVector(posX, posY);
+    //Position déterminée aléatoirement dans le bas de l'écran.
+    position.set(random(200, width - 200), random(500, height - 200.0), 0);
     
     //Détermination du type de fée
     type = determinerType();
@@ -56,18 +54,21 @@ class Fee {
     //les attributs associées au type sont accordées à la fée
     
     tabImages = new PImage[3];
-    dimension = 100;
+    dimension = int(random(80.0f, 120.0f));
     idxImageCourante = 0;
     
     switch(type) {
       case FEE_TYPE_BLEU :
         definirLesImages(feeRefBleu);
+        couleurTeinte = color(24,124,254,255);
         break;
       case FEE_TYPE_ROSE :
         definirLesImages(feeRefRose);
+        couleurTeinte = color(255,71,138,255);
         break;
       case FEE_TYPE_JAUNE :
         definirLesImages(feeRefJaune);
+        couleurTeinte = color(255,239,48,255);
         break;
     }
     
@@ -78,7 +79,7 @@ class Fee {
     
     imgFond = createImage(dimension, dimension, ARGB);
     imgFond.copy(feeRefFond, 0, 0, feeRefFond.width, feeRefFond.height, 0, 0, dimension, dimension);
-    angleProportionFond = 0.0f;
+    angleProportionFond = random(360.0f);
     
     attrapee = false;
     angleRotation = 0.0f;
@@ -113,7 +114,9 @@ class Fee {
     pushMatrix();
     scale(proportionFond());
 
+    tint(couleurTeinte);
     image(imgFond, 0, 0);
+    tint(255, 255);
 
     popMatrix();
     
@@ -208,7 +211,7 @@ class Fee {
   float proportionFond() {
     //Déterminer la proportion voulue
     float proportion;
-    proportion = 1.5f + sin(radians(angleProportionFond)) * 0.5f;
+    proportion = 0.5f + sin(radians(angleProportionFond)) * 0.3f;
     
     //Mise à jour de l'angle assiciée à l'intensité de la redimension 
     angleProportionFond = (angleProportionFond + 5.0) % 360;

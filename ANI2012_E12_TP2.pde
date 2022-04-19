@@ -9,16 +9,13 @@
    * Olivier Desmarais
  */
  
-//Importations de la classe Sound afin de pouvoir jouer des sons
+//Importations nécessaires au bon fonctionnement du programme.
 import processing.sound.*;
-
 import java.util.Iterator;
-
 import processing.video.*; // Dépendance: Video 2.0 | GStreamer-based video library for Processing.
-
 import java.util.TreeMap;
 
-//Strcture canevas
+//Strcture du canevas
 final int dimensionX = 1020;
 final int dimensionY = 720;
 
@@ -43,6 +40,9 @@ PImage imgPremierPlan;
 Movie auroresBoreales;
 SoundFile sonClic;
 
+//Feuillage
+Feuillage feuillage;
+
 //Animations
 Sequencer sequencer;
 
@@ -54,10 +54,11 @@ color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
 
 //Fées
 //PImage[] feeRef;
-int nbFees = 8;
+int nbFees = 5;
 //Fee fee1;
 Fee[] tabFees;
-PImage feeRefFond;
+PGraphics feeRefFond;
+//PImage feeRefFond;
 PImage[] feeRefBleu, feeRefJaune, feeRefRose;
 AnimationClip clipFee;
 SoundFile sonFee;
@@ -127,11 +128,13 @@ void setup() {
   idxCouleurBrumeRef = int(random(couleursBrume.length));
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
-  
+  //Feuillage
+  feuillage = new Feuillage();
 
   //Fée
   //Affichage
-  feeRefFond = loadImage("images/fee/PAPILLON05.png");
+  genererFerRefFond();
+  //feeRefFond = loadImage("images/fee/PAPILLON05.png");
   feeRefBleu = remplirTabImgRef("bleu");
   feeRefJaune = remplirTabImgRef("jaune");
   feeRefRose = remplirTabImgRef("rose");
@@ -275,6 +278,17 @@ void keyReleased() {
     idxCapture++;
   }
   
+  if (keyCode == UP)
+  {
+    feuillage.depthCurrent = ++feuillage.depthCurrent < feuillage.depthMax ? feuillage.depthCurrent : feuillage.depthMax;
+    feuillage.generate();
+  }
+  if (keyCode == DOWN)
+  {
+    feuillage.depthCurrent = --feuillage.depthCurrent > 0 ? feuillage.depthCurrent : 0;
+    feuillage.generate();
+  }
+  
   //Test
   //if (key == 't')
     //println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
@@ -290,7 +304,7 @@ void ajouterPosesCles() {
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
 //à leur état initial
 void initialisation() {
-  //Gestion du temps
+  //Gestion du tempsaff
   /*tempsEcoule = 0.0f;
   tempsCourant = 0.0f;
   tempsCourant = millis();*/
@@ -356,6 +370,9 @@ void afficherJeu() {
     fee.update();
     fee.render();
   }
+  
+  //Afficher le feuillage dans les arbres
+  feuillage.render();
   
   imageMode(CORNER);
   image(imgPremierPlan, 0, 0);
@@ -424,4 +441,49 @@ PImage[] remplirTabImgRef( String couleurType) {
   
   //Retour du tableau
   return tabImgRef;
+}
+
+void genererFerRefFond() {
+  
+  //Source : https://nathanselikoff.com/training/tutorial-strange-attractors-in-c-and-opengl
+
+  float x = 0.1, y = 0.1,    // starting point
+        a = -0.966918,      // coefficients for "The King's Dream"
+        b = 2.879879,
+        c = 0.765145,
+        d = 0.744728;
+      
+  //int initialIterations = 100,  // initial number of iterations
+                                // to allow the attractor to settle
+  int iterations = 2500000;    // number of times to iterate through
+                                // the functions and draw a point
+  
+  feeRefFond = createGraphics(400, 400);
+  feeRefFond.smooth(8);
+  feeRefFond.beginDraw();
+  feeRefFond.fill(255);
+  feeRefFond.stroke(255, 10);
+  feeRefFond.strokeWeight(0.005);
+  feeRefFond.scale(100, 100);
+  feeRefFond.translate(2, 2);
+  
+  println("début dessin");
+  
+  // draw some points
+  // go through the equations many times, drawing a point for each iteration
+  for (int i = 0; i < iterations; i++) {
+ 
+    // compute a new point using the strange attractor equations
+    float xnew = sin(y*b) + c*sin(x*b);
+    float ynew = sin(x*a) + d*sin(y*a);
+ 
+    // save the new point
+    x = xnew;
+    y = ynew;
+ 
+    // draw the new point
+    feeRefFond.point(x, y);
+  }
+  
+  feeRefFond.endDraw();
 }

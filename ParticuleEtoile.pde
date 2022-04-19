@@ -73,6 +73,7 @@ class ParticuleEtoile extends ParticlePhysic {
   
   void render() {
     
+    noStroke();
     fill(colorDiffuse);
     
     //Variable pour l'affichage d'une étoile

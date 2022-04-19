@@ -69,6 +69,7 @@ class ParticuleBrume extends ParticlePhysic {
   }
   
   void render() {
+    noStroke();
     colorDiffuse = couleursBrume[idxCouleur];
     fill(colorDiffuse, transparence--);
     ellipse(position.x, position.y, diametre, diametre);
