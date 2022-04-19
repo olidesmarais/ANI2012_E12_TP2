@@ -108,7 +108,6 @@ class Feuille
           translate(segment, 0);
           strokeWeight(3);
           point(0, 0);
-          //ellipse(0, 0, 10, 10);
           break;
 
         case 'X':
@@ -118,7 +117,6 @@ class Feuille
           break;
         
         case '0':
-          // do nothing
           translate(segment, 0);
           strokeWeight(5);
           ellipse(0, 0, 2 * segment, segment / 2.5);

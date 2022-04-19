@@ -70,9 +70,4 @@ class Particle
     fill(colorDiffuse, 127);
     ellipse(position.x, position.y, 32, 32);
   }
-
-  void print(String tag)
-  {
-    println("particle" + tag + " = (" + position.x + " " + position.y + " " + position.z +")");
-  }
 }

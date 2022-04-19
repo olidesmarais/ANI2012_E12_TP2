@@ -53,12 +53,9 @@ ParticleSystem psBrume;
 color[] couleursBrume = {#eccd16, #FF3869, #24B4AB, #C7EA46};
 
 //Fées
-//PImage[] feeRef;
 int nbFees = 5;
-//Fee fee1;
 Fee[] tabFees;
 PGraphics feeRefFond;
-//PImage feeRefFond;
 PImage[] feeRefBleu, feeRefJaune, feeRefRose;
 AnimationClip clipFee;
 SoundFile sonFee;
@@ -71,7 +68,6 @@ SoundFile sonEtoile1;
 Vector3D pointeBaguette;
 
 //Gestion du temps
-//float tempsEcoule, tempsCourant;
 float timeNow, timeLast, timeElapsed;
 
 //Musique
@@ -114,7 +110,7 @@ void setup() {
   policeBouton = loadFont("polices/AvenirLTStd-Heavy-48.vlw");
   
   //Début du jeu
-  bCommencer = new Bouton (centreX, 525, 285, 85, false, "COMMENCER", 22);
+  bCommencer = new Bouton (centreX, 525, 285, 85, "COMMENCER", 22);
   
   //Environnement
   imgAccueil = loadImage("images/ACCEUIL.png");
@@ -133,8 +129,7 @@ void setup() {
 
   //Fée
   //Affichage
-  genererFerRefFond();
-  //feeRefFond = loadImage("images/fee/PAPILLON05.png");
+  genererFeeRefFond();
   feeRefBleu = remplirTabImgRef("bleu");
   feeRefJaune = remplirTabImgRef("jaune");
   feeRefRose = remplirTabImgRef("rose");
@@ -142,7 +137,6 @@ void setup() {
   tabFees = new Fee[nbFees];
   for (int idx = 0 ; idx < nbFees ; idx++)
     tabFees[idx] = new Fee();
-   //fee1 = new Fee();
    
   //Animation
   String[] tabCourbeFee = {"rotation"};
@@ -184,10 +178,6 @@ void draw() {
     timeNow = millis();
     timeElapsed = (timeNow - timeLast) / 1000.0f;
     timeLast = timeNow;
-    
-    /*tempsEcoule = (millis() - tempsCourant) / 1000.0f;
-    
-    tempsCourant = millis();*/
       
     //Jouer la musique
     //La vitesse de la musique est directement proportionnelle avec le nombre
@@ -202,11 +192,8 @@ void draw() {
     }
   }
   
+  //Afficher la baguette
   afficherBaguette();
-  /*//Écran de fin
-  if (fin) {
-    afficherFin();
-  }*/
 }
 
 void mousePressed() {
@@ -214,23 +201,23 @@ void mousePressed() {
   //Cette variable est notée dans le boolean "pressed".
   pressed = true;
   
-  for (Fee fee : tabFees) {
-    if(fee.verifierSuperposition() && pressed) {
-        fee.attrapee = true;
-        fee.timeLast = millis();
+  if (jeu){
+    //Vérifier si une ou des fées sont attrapées
+    for (Fee fee : tabFees) {
+      if(fee.verifierSuperposition() && pressed) {
+          fee.attrapee = true;
+          fee.timeLast = millis();
+      }
     }
-  }
-      
+  }  
 }
 
 void mouseReleased() {
   //Pendant le jeu :
-  //Il est vérifié si le relâchement de la souris est une tentative d'attaque.
-  //Si oui et le niveau de magie le permet, l'attaque a bien lieu. Sinon, une
-  //rétroaction informe le joueur du manque de magie par un son et le cadre de
-  //la jauge de magie qui change au rouge.
   if (jeu){
-
+    //Relâcher toutes les fées
+    for (Fee fee : tabFees)
+      fee.attrapee = false;
   }
   
   //Pendant le début :
@@ -245,8 +232,7 @@ void mouseReleased() {
   //La souris n'est plus pressée
   pressed = false;
   
-  for (Fee fee : tabFees)
-    fee.attrapee = false;
+  
 
 }
 
@@ -440,7 +426,7 @@ PImage[] remplirTabImgRef( String couleurType) {
 
 
 //Fonction générant le système chaotique qui sert d'arrière-plan aux fées
-void genererFerRefFond() {
+void genererFeeRefFond() {
   
   //Source : https://nathanselikoff.com/training/tutorial-strange-attractors-in-c-and-opengl
 

@@ -5,13 +5,6 @@ class ParticleSystem
 {
   final static int PARTICLE_TYPE_ETOILE  = 1;
   final static int PARTICLE_TYPE_BRUME   = 2;
-  
-  /*final static int PARTICLE_TYPE_NONE    = 0;
-  final static int PARTICLE_TYPE_FIREFLY = 1;
-  final static int PARTICLE_TYPE_PHYSIC  = 2;
-  final static int PARTICLE_TYPE_SNOW    = 3;
-  final static int PARTICLE_TYPE_FLAME   = 4;
-  final static int PARTICLE_TYPE_ETOILE  = 5;*/
 
   int index;
 
@@ -46,13 +39,6 @@ class ParticleSystem
 
   Particle particle;
 
-  /*ParticleSystem()
-  {
-    count = 10;
-    type = PARTICLE_TYPE_SNOW;
-    init();
-  }*/
-
   ParticleSystem(int size, int type)
   {
     count = size;
@@ -74,22 +60,6 @@ class ParticleSystem
     {
       switch (type)
       {
-        /*case PARTICLE_TYPE_FIREFLY:
-          particle = new ParticleFirefly();
-          probabilitySpawn = ParticleFirefly.probabilitySpawn;
-          break;
-       case PARTICLE_TYPE_PHYSIC:
-          particle = new ParticlePhysic();
-          probabilitySpawn = ParticlePhysic.probabilitySpawn;
-          break;
-        case PARTICLE_TYPE_SNOW:
-          particle = new ParticleSnow();
-          probabilitySpawn = ParticleSnow.probabilitySpawn;
-          break;
-        case PARTICLE_TYPE_FLAME:
-          particle = new ParticleFlame();
-          probabilitySpawn = ParticleFlame.probabilitySpawn;
-          break;*/
         case PARTICLE_TYPE_ETOILE:
           particle = new ParticuleEtoile();
           probabilitySpawn = ParticuleEtoile.probabilitySpawn;
@@ -202,10 +172,5 @@ class ParticleSystem
   {
     particleActive.remove(p);
     particleReady.add(p);
-  }
-
-  void print(String tag)
-  {
-    println("particle system " + tag + " (" + particleActive.size() + " " + particleReady.size() + " " + count + ")");
   }
 }

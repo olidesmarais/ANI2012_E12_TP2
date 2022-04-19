@@ -1,18 +1,13 @@
 class Bouton {
   PVector position;
   float largeur, hauteur;
-  boolean contour;
-  //color couleurFond;
   String texte;
   int sizeTxt;
-  //color couleurPolice;
   
-  
-  Bouton(float x, float y, float w, float h, boolean c, String t, int s) {
+  Bouton(float x, float y, float w, float h, String t, int s) {
     position = new PVector (x, y);
     largeur = w;
     hauteur = h;
-    contour = c;
     texte = t;
     sizeTxt = s;
   }
@@ -22,21 +17,13 @@ class Bouton {
     textAlign(CENTER, CENTER);
     
     fill(255);
-    
-    //Afficher un comptour s'il en faut un
-    if (contour) {
-      //stroke(130);
-      stroke(4, 51, 83);
-      strokeWeight(5);
-    } else {
-      noStroke();
-    }
-    
-    //Si la souris est par-dessus le bouton, la tailledu bouton est plus grande
+    noStroke();
+
+    //Si la souris est par-dessus le bouton, la taille du bouton est plus grande
     //et la couleur de sa police est modifiée.
     if (verifierSuperposition(pointeBaguette.x, pointeBaguette.y)) {
       rect( position.x, position.y, largeur * 1.1f, hauteur * 1.1f);
-      fill(0, 200, 0);
+      fill(200, 100, 200);
     } else {
       rect( position.x, position.y, largeur, hauteur);
       fill(0);

@@ -137,45 +137,43 @@ class Fee {
   
   void update() {
     
-    /*if(verifierSuperposition() && pressed)
-      attrapee = true;
-    else if (!pressed)
-      attrapee = false;*/
-    
-    //Si la fée est attrapée, sa position devient celle de la pointe de la baguette, en conservant la translation courante.
+    //Si la fée est attrapée : 
     if (attrapee) {
+      //Sa position devient celle de la pointe de la baguette, en conservant la translation courante.
       position.set(pointeBaguette.x - translationCourante.x, pointeBaguette.y - translationCourante.y, 0.0f);
+      //Le battement d'ailes s'interrompt
       idxImageCourante = 0;
-   
+       
+      //Le temps commence à être monitoré pour l'animation de rotation et du rire
       timeNow = millis();
       timeElapsed = (timeNow - timeLast) / 1000.0f;
       timeLast = timeNow;
       
+      //Rotation périodique de la fée par le biais d'une courbe d'animation 
       timelinePlayhead += timeElapsed;
       if (timelinePlayhead >= timelineDuration)
         timelinePlayhead -= timelineDuration;
-        
       sequencer.update("clipFee", timelinePlayhead);
       angleRotation = sequencer.rotationFee;
       
+      //Le rire de la fait se fait entendre après l'avoir attrappée un certain moment
       delaiRire += timeElapsed;
       if (delaiRire >= frequenceRire) {
         sonFee.play();
         delaiRire -= delaiRire;
       }
       
-    //Sinon, la translation se poursuit
+    //Sinon, la translation et le battement d'ailes se poursuivent
     } else {
       translationCourante.copy(translationFee());
       angleRotation = 0.0f;
       idxImageCourante = (idxImageCourante + 1) % 3;
     }
-    //println(angleRotation);
   }
   
+  //Fonction permettant de vérifier si le joueur clique sur la fée avec sa baguette
   boolean verifierSuperposition() {    
 
-    //Vector3D emplacementActuel = new Vector3D();
     Vector3D coinImgActuelActuel = new Vector3D();
     Vector3D positionRelative = new Vector3D();
     
@@ -208,6 +206,7 @@ class Fee {
     return false;
   }
   
+  //Fonction régulant la redimension de l'arrière-plan de la fée
   float proportionFond() {
     //Déterminer la proportion voulue
     float proportion;
@@ -220,6 +219,7 @@ class Fee {
     return proportion;
   }
   
+  //Fonction régulant la translation de la fée
   Vector3D translationFee() {
     //Intensité de la translation en X et en Y
     Vector3D translationCourante = new Vector3D( sin(radians(angleTranslation.x)) * translationMax.x, sin(radians(angleTranslation.y)) * translationMax.y, 0.0f);

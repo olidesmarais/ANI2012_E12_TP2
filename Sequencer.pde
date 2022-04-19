@@ -6,12 +6,6 @@ class Sequencer {
   
   float timeCurrent;
   
-  /*//Attribut courant des différentes courbes d'animation
-  float attributeCurrentValuePositionX;
-  float attributeCurrentValuePositionY;
-  float attributeCurrentValueRotation;
-  int attributeCurrentValueCouleurR, attributeCurrentValueCouleurG, attributeCurrentValueCouleurB;*/
-  
   Sequencer() {
   }
   
@@ -19,14 +13,6 @@ class Sequencer {
     timeCurrent = timelinePlayhead;
     
     rotationFee = evaluate(nomClip, "rotation", timelinePlayhead);
-    //println("updateSequencer");
-    
-    
-    /*attributeCurrentValuePositionY = evaluate("positionY", timelinePlayhead);
-    attributeCurrentValueRotation = evaluate("rotation", timelinePlayhead);
-    attributeCurrentValueCouleurR = int(evaluate("couleurR", timelinePlayhead));
-    attributeCurrentValueCouleurG = int(evaluate("couleurG", timelinePlayhead));
-    attributeCurrentValueCouleurB = int(evaluate("couleurB", timelinePlayhead));*/
   }
   
   float evaluate(String nomClip, String attributeName, float timestamp) {
@@ -46,10 +32,8 @@ class Sequencer {
     
     if (nomClip == "clipFee") {
       curve = clipFee.curveCollection.get(attributeName);
-      //println("evaluate clipFee");
     } else {
       curve = null;
-      //println("curve = null");
     }
     
     //Si la courbe d'animation existe
