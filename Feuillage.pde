@@ -12,8 +12,10 @@ class Feuillage {
   Feuillage() {
     depthCurrent = 2;
     
+    ajouterFeuilles();
+    
     //Ajout des feuilles contenues dans le feuillage dans le tableau permettant de les répertorier
-    tabFeuilles = new Feuille[10];
+    /*tabFeuilles = new Feuille[10];
     tabFeuilles[0] = new Feuille(938.0, 233.0, -1.920796, 16.0);
     tabFeuilles[1] = new Feuille(977.0, 220.0, 1.1692016, 15.0);
     tabFeuilles[2] = new Feuille(743.0, 203.0, -3.8407943, 21.0);
@@ -23,10 +25,30 @@ class Feuillage {
     tabFeuilles[6] = new Feuille(79.0, 448.0, -1.930796, 50.0);
     tabFeuilles[7] = new Feuille(149.0, 286.0, -0.9907969, 18.0);
     tabFeuilles[8] = new Feuille(139.0, 324.0, -2.200796, 24.0);
-    tabFeuilles[9] = new Feuille(835.0, 238.0, -4.1007967, 30.0);
+    tabFeuilles[9] = new Feuille(835.0, 238.0, -4.1007967, 30.0);*/
     
     //Génération du système
     generate();
+  }
+  
+  void ajouterFeuilles() {
+    float posX;
+    float posY;
+    float angle;
+    float size;
+    
+    tabFeuilles = new Feuille[dataFeuilles.getRowCount()];
+    
+    for (int idx = 0 ; idx < dataFeuilles.getRowCount() ; idx++) {
+      posX = dataFeuilles.getFloat(idx, 0);
+      posY = dataFeuilles.getFloat(idx, 1);
+      angle = dataFeuilles.getFloat(idx, 2);
+      size = dataFeuilles.getFloat(idx, 3);
+
+      tabFeuilles[idx] = new Feuille(posX, posY, angle, size);
+    }
+    
+    
   }
   
   //Fonction permettant de générer le système de Lindenmayer de chacune des feuilles

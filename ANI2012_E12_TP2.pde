@@ -30,7 +30,7 @@ boolean pressed;
 PFont policeTitre, policeTexte, policeBouton;
 
 //Structure du jeu
-boolean debut, jeu; //, fin;
+boolean debut, principal;
 Bouton bCommencer;
 
 //Environnement
@@ -42,6 +42,7 @@ SoundFile sonClic;
 
 //Feuillage
 Feuillage feuillage;
+Table dataFeuilles;
 
 //Animations
 Sequencer sequencer;
@@ -100,7 +101,7 @@ void setup() {
   
   //Structure du jeu
   debut = true;
-  jeu = false;
+  principal = false;
   //fin = false;
   sonClic = new SoundFile(this, "audios/sonClic.wav");
   
@@ -125,6 +126,7 @@ void setup() {
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
   //Feuillage
+  dataFeuilles = loadTable("donneesFeuilles.csv", "header");
   feuillage = new Feuillage();
 
   //Fée
@@ -170,9 +172,9 @@ void draw() {
   }
   
   //Déroulement du jeu
-  if(jeu) {    
+  if(principal) {    
     //Écran principal
-    afficherJeu();
+    afficherPrincipal();
 
     //Gestion du temps
     timeNow = millis();
@@ -201,7 +203,7 @@ void mousePressed() {
   //Cette variable est notée dans le boolean "pressed".
   pressed = true;
   
-  if (jeu){
+  if (principal){
     //Vérifier si une ou des fées sont attrapées
     for (Fee fee : tabFees) {
       if(fee.verifierSuperposition() && pressed) {
@@ -214,7 +216,7 @@ void mousePressed() {
 
 void mouseReleased() {
   //Pendant le jeu :
-  if (jeu){
+  if (principal){
     //Relâcher toutes les fées
     for (Fee fee : tabFees)
       fee.attrapee = false;
@@ -320,7 +322,7 @@ void afficherAccueil() {
 }
   
 
-void afficherJeu() {
+void afficherPrincipal() {
   //Afficher le décor
   imageMode(CORNER);
  
@@ -386,7 +388,7 @@ void clicBouton() {
   initialisation();
   
   //Transition du début/de la fin du jeu vers le jeu
-  jeu = true;
+  principal = true;
   debut = false;
   
   //Son du bouton
