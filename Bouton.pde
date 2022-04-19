@@ -34,7 +34,7 @@ class Bouton {
     
     //Si la souris est par-dessus le bouton, la tailledu bouton est plus grande
     //et la couleur de sa police est modifiée.
-    if (verifierSuperposition()) {
+    if (verifierSuperposition(pointeBaguette.x, pointeBaguette.y)) {
       rect( position.x, position.y, largeur * 1.1f, hauteur * 1.1f);
       fill(0, 200, 0);
     } else {
@@ -47,15 +47,15 @@ class Bouton {
     text(texte, position.x, position.y); 
   }
   
-  boolean verifierSuperposition() {
+  boolean verifierSuperposition( float posX, float posY) {
     boolean supX = false, supY = false;
     
     //Vérifier s'il y a superposition sur l'axe des X
-    if (mouseX > position.x - largeur / 2 && mouseX < position.x + largeur / 2)
+    if (posX > position.x - largeur / 2 && posX < position.x + largeur / 2)
       supX = true;
      
      //Vérifier s'il y a superposition sur l'axe des Y
-     if (mouseY > position.y - hauteur / 2 && mouseY < position.y + hauteur / 2)
+     if (posY > position.y - hauteur / 2 && posY < position.y + hauteur / 2)
        supY = true;
      
      //Retourner vrai s'il y a superposition dans les deux axes

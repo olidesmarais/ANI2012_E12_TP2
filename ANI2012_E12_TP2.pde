@@ -201,6 +201,8 @@ void draw() {
       delaiMusique -= frequenceMusique;
     }
   }
+  
+  afficherBaguette();
   /*//Écran de fin
   if (fin) {
     afficherFin();
@@ -235,34 +237,20 @@ void mouseReleased() {
   //Il est vérifié si le relâchement de la souris démontre le désir de cliquer
   //sur le bouton commencer.
   if (debut) {
-    if (bCommencer.verifierSuperposition()) {
+    if (bCommencer.verifierSuperposition(pointeBaguette.x, pointeBaguette.y)) {
       clicBouton();
     }
   }
 
-  //Pendant la fin :
-  //Il est vérifié si le relâchement de la souris démontre le désir de cliquer
-  //sur le bouton rejouer.
-  /*if (fin) {
-    if (bRejouer.verifierSuperposition()) {
-      clicBouton();
-    }
-  }*/
-  
   //La souris n'est plus pressée
   pressed = false;
   
   for (Fee fee : tabFees)
     fee.attrapee = false;
-  //fee1.timeLast = millis();
+
 }
 
 void keyReleased() {
-  //Raccourci pour le slider jour-nuit (ESPACE)
-  if (key == ' ') {
-    
-  }
-  
   //Raccourci pour cliquer sur un bouton (ENTER)
   if (keyCode == ENTER) {
     clicBouton();
@@ -278,20 +266,19 @@ void keyReleased() {
     idxCapture++;
   }
   
+  //La flèche vers le haut permet d'augmenter la profondeur des feuilles dans le paysage
   if (keyCode == UP)
   {
     feuillage.depthCurrent = ++feuillage.depthCurrent < feuillage.depthMax ? feuillage.depthCurrent : feuillage.depthMax;
     feuillage.generate();
   }
+  
+  //La flèche vers le bas permet de diminuer la profondeur des feuilles dans le paysage
   if (keyCode == DOWN)
   {
     feuillage.depthCurrent = --feuillage.depthCurrent > 0 ? feuillage.depthCurrent : 0;
     feuillage.generate();
   }
-  
-  //Test
-  //if (key == 't')
-    //println("x : " + (pointeBaguette.x - fee1.position.x) + "; y : " +  (pointeBaguette.y - fee1.position.y));
 }
 
 void ajouterPosesCles() {
@@ -304,10 +291,6 @@ void ajouterPosesCles() {
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
 //à leur état initial
 void initialisation() {
-  //Gestion du tempsaff
-  /*tempsEcoule = 0.0f;
-  tempsCourant = 0.0f;
-  tempsCourant = millis();*/
   //Gestion du temps
   timeNow = timeLast = millis();
   timeElapsed = 0.0f;
@@ -354,18 +337,29 @@ void afficherAccueil() {
 void afficherJeu() {
   //Afficher le décor
   imageMode(CORNER);
+ 
+  //Vidéo en arrière-plan (-5)
   auroresBoreales.play();
   image(auroresBoreales, 0, -250);
+  
+  //Arrière-plan-4
   tint(255, 150);
   image(imgBackground4, 0, 0);
   tint(255, 255);
+  
+  //Arrière-plan-3
   image(imgBackground3, 0, 0);
+  
+  //Arrière-plan-2
   image(imgBackground2, 0, 0);
+  
+  //Affichage de la brume
   psBrume.update(true);
+  
+  //Arrièreplan-1
   image(imgBackground1, 0, 0);
   
-  
-  
+  //Mise à jour et affichage des fées
   for (Fee fee : tabFees) {
     fee.update();
     fee.render();
@@ -374,12 +368,12 @@ void afficherJeu() {
   //Afficher le feuillage dans les arbres
   feuillage.render();
   
+  //Affficher le premier-plan
   imageMode(CORNER);
   image(imgPremierPlan, 0, 0);
-  
-  afficherBaguette();
 }
 
+//Lecture successive des images de la vidéo
 void movieEvent(Movie movie)
 {
   if (movie.available())
@@ -408,12 +402,12 @@ void clicBouton() {
   //Transition du début/de la fin du jeu vers le jeu
   jeu = true;
   debut = false;
-  //fin = false;
   
   //Son du bouton
   sonClic.play();
 }
 
+//Fonction permettant d'afficher la baguette utilisée par le joueur pour interagir avec le programme.
 void afficherBaguette() {
   
   //Identifier l'emplacement de la pointe de la baguette
@@ -429,6 +423,7 @@ void afficherBaguette() {
   
 }
 
+//Fonction qui remplit et retourne un tableau d'images de références pour l'illustration des fées
 PImage[] remplirTabImgRef( String couleurType) {
   
   //Création du tableau d'images de référence
@@ -443,21 +438,22 @@ PImage[] remplirTabImgRef( String couleurType) {
   return tabImgRef;
 }
 
+
+//Fonction générant le système chaotique qui sert d'arrière-plan aux fées
 void genererFerRefFond() {
   
   //Source : https://nathanselikoff.com/training/tutorial-strange-attractors-in-c-and-opengl
 
   float x = 0.1, y = 0.1,    // starting point
-        a = -0.966918,      // coefficients for "The King's Dream"
+        a = -0.966918,       // coefficients for "The King's Dream"
         b = 2.879879,
         c = 0.765145,
         d = 0.744728;
-      
-  //int initialIterations = 100,  // initial number of iterations
-                                // to allow the attractor to settle
+
   int iterations = 2500000;    // number of times to iterate through
-                                // the functions and draw a point
+                               // the functions and draw a point
   
+  //Configurations
   feeRefFond = createGraphics(400, 400);
   feeRefFond.smooth(8);
   feeRefFond.beginDraw();
@@ -467,23 +463,21 @@ void genererFerRefFond() {
   feeRefFond.scale(100, 100);
   feeRefFond.translate(2, 2);
   
-  println("début dessin");
-  
-  // draw some points
-  // go through the equations many times, drawing a point for each iteration
+  // Dessiner tous les points
   for (int i = 0; i < iterations; i++) {
  
-    // compute a new point using the strange attractor equations
+    // Computer la position du prochain point
     float xnew = sin(y*b) + c*sin(x*b);
     float ynew = sin(x*a) + d*sin(y*a);
  
-    // save the new point
+    // Enregistrer la position
     x = xnew;
     y = ynew;
  
-    // draw the new point
+    //Dessin du point
     feeRefFond.point(x, y);
   }
   
+  //Fin du dessin
   feeRefFond.endDraw();
 }
