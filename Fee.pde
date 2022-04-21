@@ -55,7 +55,7 @@ class Fee {
     
     tabImages = new PImage[3];
     dimension = int(random(80.0f, 120.0f));
-    idxImageCourante = 0;
+    idxImageCourante = int(random(2));
     
     switch(type) {
       case FEE_TYPE_BLEU :
@@ -75,7 +75,6 @@ class Fee {
     //Copie de l'image de référence pour le bon type 
     imgPapillon = createImage(dimension, dimension, ARGB);
     //imgPapillon.copy(tabImages[idxImageCourante], 0, 0, tabImages[idxImageCourante].width, tabImages[idxImageCourante].height, 0, 0, dimension, dimension);
-    
     
     imgFond = createImage(dimension, dimension, ARGB);
     imgFond.copy(feeRefFond, 0, 0, feeRefFond.width, feeRefFond.height, 0, 0, dimension, dimension);

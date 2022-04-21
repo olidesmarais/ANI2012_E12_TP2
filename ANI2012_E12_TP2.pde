@@ -334,9 +334,11 @@ void afficherPrincipal() {
   tint(255, 150);
   image(imgBackground4, 0, 0);
   tint(255, 255);
+ 
   
   //Arrière-plan-3
   image(imgBackground3, 0, 0);
+   //filter(BLUR, 2);
   
   //Arrière-plan-2
   image(imgBackground2, 0, 0);
