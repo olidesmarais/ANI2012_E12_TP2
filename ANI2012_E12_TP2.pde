@@ -61,6 +61,10 @@ PImage[] feeRefBleu, feeRefJaune, feeRefRose;
 AnimationClip clipFee;
 SoundFile sonFee;
 
+//Animaux
+PImage imgRenard;
+Animal renard;
+
 //Baguette
 PImage imgBaguette;
 ParticleSystem psEtoile;
@@ -84,6 +88,12 @@ float frequenceMusique;
 float delaiNote;
 final float longueurNote = 0.1f;
 boolean musiqueOn;
+
+
+
+//Test
+boolean isGoingLeft, isGoingRight, isGoingDown, isGoingUp;
+boolean isRotatingLeft, isRotatingRight;
 
 void settings() {
   size( dimensionX, dimensionY);
@@ -140,6 +150,10 @@ void setup() {
   for (int idx = 0 ; idx < nbFees ; idx++)
     tabFees[idx] = new Fee();
    
+  //Animaux
+  imgRenard = loadImage("images/animaux/RENARD_S.png");
+  renard = new Renard();
+  
   //Animation
   String[] tabCourbeFee = {"rotation"};
   clipFee = new AnimationClip(tabCourbeFee);
@@ -163,6 +177,10 @@ void setup() {
   sequencer = new Sequencer();
   sequencer.clipFee = clipFee;
   ajouterPosesCles();
+  
+  //Test
+  isGoingLeft = isGoingRight = isGoingDown = isGoingUp = false;
+  isRotatingLeft = isRotatingRight = false;
 }
 
 void draw() {
@@ -196,6 +214,24 @@ void draw() {
   
   //Afficher la baguette
   afficherBaguette();
+  
+  //Test
+  if (isGoingLeft)
+    renard.position.x--;
+  if (isGoingRight)
+    renard.position.x++;
+  if (isGoingDown)
+    renard.position.y++;
+  if (isGoingUp)
+    renard.position.y--;
+    
+  if (isRotatingRight)
+    renard.rotation += 0.01;
+  if (isRotatingLeft)
+    renard.rotation -= 0.01;
+    
+
+  renard.render();
 }
 
 void mousePressed() {
@@ -211,7 +247,10 @@ void mousePressed() {
           fee.timeLast = millis();
       }
     }
-  }  
+  }
+  
+  
+  
 }
 
 void mouseReleased() {
@@ -236,6 +275,23 @@ void mouseReleased() {
   
   
 
+}
+
+void keyPressed() {
+  
+  //Test
+  if (key == 'a')
+    isGoingLeft = true;
+  if (key == 'd')
+    isGoingRight = true;
+  if (key == 'w')
+    isGoingUp = true;
+  if (key == 's')
+    isGoingDown = true;
+  if (keyCode == RIGHT)
+    isRotatingRight = true;
+  if (keyCode == LEFT)
+    isRotatingLeft = true;
 }
 
 void keyReleased() {
@@ -267,6 +323,24 @@ void keyReleased() {
     feuillage.depthCurrent = --feuillage.depthCurrent > 0 ? feuillage.depthCurrent : 0;
     feuillage.generate();
   }
+  
+  
+  //Test
+  if (key == 'a')
+    isGoingLeft = false;
+  if (key == 'd')
+    isGoingRight = false;
+  if (key == 'w')
+    isGoingUp = false;
+  if (key == 's')
+    isGoingDown = false;
+  if (keyCode == RIGHT)
+    isRotatingRight = false;
+  if (keyCode == LEFT)
+    isRotatingLeft = false;
+    
+  if (key == ' ')
+    println("position : (" + renard.position.x + ", " + renard.position.y + "), rotation : " + renard.rotation);
 }
 
 void ajouterPosesCles() {
@@ -347,7 +421,7 @@ void afficherPrincipal() {
   psBrume.update(true);
   
   //Arrièreplan-1
-  image(imgBackground1, 0, 0);
+  //image(imgBackground1, 0, 0);
   
   //Mise à jour et affichage des fées
   for (Fee fee : tabFees) {
@@ -356,11 +430,11 @@ void afficherPrincipal() {
   }
   
   //Afficher le feuillage dans les arbres
-  feuillage.render();
+  //feuillage.render();
   
   //Affficher le premier-plan
   imageMode(CORNER);
-  image(imgPremierPlan, 0, 0);
+  //image(imgPremierPlan, 0, 0);
 }
 
 //Lecture successive des images de la vidéo

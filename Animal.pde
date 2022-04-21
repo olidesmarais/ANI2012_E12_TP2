@@ -1,10 +1,19 @@
 class Animal {
   
   int disposition;
+  PImage image;
+  
+  Vector3D position = new Vector3D(centreX, centreY, 0.0f);
+  float rotation = 0.0;
   
   Animal() {
     
     disposition = determinerDisposition();
+  }
+  
+  void render(){
+    imageMode(CENTER);
+    
   }
   
   //Fonction qui retourne la disposition de l'animal, en fonction de s'il
