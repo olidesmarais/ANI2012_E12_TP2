@@ -63,7 +63,7 @@ SoundFile sonFee;
 
 //Animaux
 PImage imgRenard;
-Animal renard;
+Animal renard, repere;
 
 //Baguette
 PImage imgBaguette;
@@ -102,6 +102,7 @@ void settings() {
 void setup() {
   
   frameRate(30);
+  randomSeed(millis());
   
   //Références
   idxCapture = 1;
@@ -153,6 +154,7 @@ void setup() {
   //Animaux
   imgRenard = loadImage("images/animaux/RENARD_S.png");
   renard = new Renard();
+  repere = new Repere();
   
   //Animation
   String[] tabCourbeFee = {"rotation"};
@@ -217,21 +219,22 @@ void draw() {
   
   //Test
   if (isGoingLeft)
-    renard.position.x--;
+    repere.position.x--;
   if (isGoingRight)
-    renard.position.x++;
+    repere.position.x++;
   if (isGoingDown)
-    renard.position.y++;
+    repere.position.y++;
   if (isGoingUp)
-    renard.position.y--;
+    repere.position.y--;
     
   if (isRotatingRight)
-    renard.rotation += 0.01;
+    repere.rotation += 0.01;
   if (isRotatingLeft)
-    renard.rotation -= 0.01;
+    repere.rotation -= 0.01;
     
 
-  renard.render();
+  repere.render();
+  //renard.render();
 }
 
 void mousePressed() {
@@ -340,7 +343,10 @@ void keyReleased() {
     isRotatingLeft = false;
     
   if (key == ' ')
-    println("position : (" + renard.position.x + ", " + renard.position.y + "), rotation : " + renard.rotation);
+    println("position : (" + repere.position.x + ", " + repere.position.y + "), rotation : " + repere.rotation);
+    
+  if (key == 'z')
+    renard.show = true;
 }
 
 void ajouterPosesCles() {
@@ -397,12 +403,12 @@ void afficherAccueil() {
   
 
 void afficherPrincipal() {
-  //Afficher le décor
-  imageMode(CORNER);
+  
  
   //Vidéo en arrière-plan (-5)
   auroresBoreales.play();
-  image(auroresBoreales, 0, -250);
+  imageMode(CORNER);
+  //image(auroresBoreales, 0, -250);
   
   //Arrière-plan-4
   tint(255, 150);
@@ -411,16 +417,25 @@ void afficherPrincipal() {
  
   
   //Arrière-plan-3
+  
+  imageMode(CORNER);
   image(imgBackground3, 0, 0);
+  if (renard.entree > 1)
+    renard.render();
    //filter(BLUR, 2);
   
   //Arrière-plan-2
+  
+  imageMode(CORNER);
   image(imgBackground2, 0, 0);
+  if (renard.entree <= 1)
+    renard.render();
   
   //Affichage de la brume
   psBrume.update(true);
   
   //Arrièreplan-1
+  imageMode(CORNER);
   //image(imgBackground1, 0, 0);
   
   //Mise à jour et affichage des fées
@@ -430,7 +445,7 @@ void afficherPrincipal() {
   }
   
   //Afficher le feuillage dans les arbres
-  //feuillage.render();
+  feuillage.render();
   
   //Affficher le premier-plan
   imageMode(CORNER);

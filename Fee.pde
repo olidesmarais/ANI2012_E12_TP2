@@ -18,7 +18,7 @@ class Fee {
   int couleurTeinte;
   
   //Proportion
-  float angleProportionFond;
+  //float angleProportionFond;
   
   //Rotation
   boolean attrapee;
@@ -78,7 +78,7 @@ class Fee {
     
     imgFond = createImage(dimension, dimension, ARGB);
     imgFond.copy(feeRefFond, 0, 0, feeRefFond.width, feeRefFond.height, 0, 0, dimension, dimension);
-    angleProportionFond = random(360.0f);
+    //angleProportionFond = random(360.0f);
     
     attrapee = false;
     angleRotation = 0.0f;
@@ -123,10 +123,10 @@ class Fee {
     
     if (idxImageCourante == 1) {
       tint(255, 100);
-      image(tabImages[idxImageCourante], 0, 0);
+      image(tabImages[idxImageCourante], 15, -15);
       tint(255, 255);
     } else {
-      image(tabImages[idxImageCourante], 0, 0);
+      image(tabImages[idxImageCourante], 15, -15);
     }
     
     
@@ -209,10 +209,11 @@ class Fee {
   float proportionFond() {
     //Déterminer la proportion voulue
     float proportion;
-    proportion = 0.5f + sin(radians(angleProportionFond)) * 0.3f;
+    proportion = 0.5f + sin(radians(angleTranslation.y)) * 0.3f;
+    //proportion = 0.5f + sin(radians(angleProportionFond)) * 0.3f;
     
     //Mise à jour de l'angle assiciée à l'intensité de la redimension 
-    angleProportionFond = (angleProportionFond + 5.0) % 360;
+    //angleProportionFond = (angleProportionFond + 5.0) % 360;
     
     //Retour de la valeur de proportion calculée
     return proportion;
