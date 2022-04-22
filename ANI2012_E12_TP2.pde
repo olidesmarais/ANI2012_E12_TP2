@@ -332,6 +332,7 @@ void keyReleased() {
   if (key == 'z') {
     renard.show = true;
     renard.timeNow = renard.timeLast = millis();
+    renard.timelinePlayhead = 0.0f;
   }
 }
 

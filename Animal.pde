@@ -61,7 +61,8 @@ class Animal {
       timelinePlayhead += timeElapsed;
       
       if (timelinePlayhead >= timelineDuration)
-        timelinePlayhead -= timelineDuration;
+        show = false;
+        //timelinePlayhead -= timelineDuration;
       
       switch(entree) {
         case ENTREE_DEVANT_GAUCHE:
