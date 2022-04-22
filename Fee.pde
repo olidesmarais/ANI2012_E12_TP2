@@ -129,9 +129,7 @@ class Fee {
       image(tabImages[idxImageCourante], 15, -15);
     }
     
-    
     popMatrix();
-    
   }
   
   void update() {

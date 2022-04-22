@@ -5,17 +5,20 @@ class Animal {
   final static int ENTREE_ARRIERE_GAUCHE = 2;
   final static int ENTREE_ARRIERE_DROITE = 3;
   
-  int entree;
   PImage image;
-  
+  int entree;
   boolean show, miroir;
   
   Vector3D position = new Vector3D();
-  float rotation = 0.0;
+  float rotation;
+  
+  //Animation
+  float timeLast, timeNow, timeElapsed;
+  float timelinePlayhead, timelineDuration;
   
   Animal() {
     
-    entree = int(random(4.0f));
+    entree = 0; //int(random(4.0f));
     
     switch(entree) {
       case ENTREE_DEVANT_GAUCHE :
@@ -40,7 +43,30 @@ class Animal {
         break;
     }
     
-    show = true;
+    show = false;
+    
+    //Animation
+    timelinePlayhead = 0.0f;
+    timeElapsed = 0.0f;
+    timelineDuration = 10.0f;
+  }
+  
+  void update() {
+    if (show) {
+      timeNow = millis();
+      timeElapsed = (timeNow - timeLast) / 1000.0f;
+      timeLast = timeNow;
+      
+      timelinePlayhead += timeElapsed;
+      
+      if (timelinePlayhead >= timelineDuration)
+        timelinePlayhead -= timelineDuration;
+        
+      sequencer.update("clipRenard", timelinePlayhead);
+      position.x = sequencer.renardPositionX;
+      position.y = sequencer.renardPositionY;
+      rotation = sequencer.renardRotation;
+    }
   }
   
   void render(){
@@ -60,7 +86,6 @@ class Animal {
         image(image, 0, -image.height / 3);
       popMatrix();
     }
-    
   }
   
 }

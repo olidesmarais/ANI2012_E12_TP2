@@ -4,6 +4,11 @@ class Sequencer {
   AnimationClip clipFee;
   float rotationFee;
   
+  //Clip amimaux
+  AnimationClip clipRenard;
+  float renardPositionX, renardPositionY, renardRotation;
+ 
+  
   float timeCurrent;
   
   Sequencer() {
@@ -12,10 +17,17 @@ class Sequencer {
   void update(String nomClip, float timelinePlayhead) {
     timeCurrent = timelinePlayhead;
     
-    rotationFee = evaluate(nomClip, "rotation", timelinePlayhead);
+    if (nomClip == "clipFee")
+      rotationFee = evaluate("clipFee", "rotation", timelinePlayhead, false);
+    
+    if (nomClip == "clipRenard") {
+      renardPositionX = evaluate("clipRenard", "positionX", timelinePlayhead, true);
+      renardPositionY = evaluate("clipRenard", "positionY", timelinePlayhead, true);
+      renardRotation = evaluate("clipRenard", "rotation", timelinePlayhead, true);
+    }
   }
   
-  float evaluate(String nomClip, String attributeName, float timestamp) {
+  float evaluate(String nomClip, String attributeName, float timestamp, boolean linear) {
     Keyframe keyframe1, keyframe2;
     
     float keyframeValue1 = 0.0f;
@@ -32,6 +44,8 @@ class Sequencer {
     
     if (nomClip == "clipFee") {
       curve = clipFee.curveCollection.get(attributeName);
+    } else if (nomClip == "clipRenard") {
+      curve = clipRenard.curveCollection.get(attributeName);
     } else {
       curve = null;
     }
@@ -58,9 +72,12 @@ class Sequencer {
           //claculer la progression entre la pose clée 1 et la pose clé 2
           progression = (timestamp - keyframeTimestamp1) / (keyframeTimestamp2 - keyframeTimestamp1);
           
-          //interpolation avec accélération et décélération
-          valueInterpolated = interpolationSmoothstep(keyframeValue1, keyframeValue2, progression);
-          
+          if (linear) {
+            valueInterpolated = interpolationLinear(keyframeValue1, keyframeValue2, progression);
+          } else {
+            //interpolation avec accélération et décélération
+            valueInterpolated = interpolationSmoothstep(keyframeValue1, keyframeValue2, progression);
+          }
           return valueInterpolated;
         }
       
@@ -68,6 +85,18 @@ class Sequencer {
     }
     
     return 0.0f;
+  }
+  
+  // fonction qui calcule une interpolation linéaire entre deux valeurs numériques
+  float interpolationLinear(float value1, float value2, float t)
+  {
+    if (t < 0.0f)
+      return value1;
+
+    if (t > 1.0f)
+      return value2;
+
+    return (1.0f - t) * value1 + t * value2;
   }
   
   //Fonction qui calcule l'interpolation entre la valeur de deux pose clée (value1 et value2) en fonction de la progression

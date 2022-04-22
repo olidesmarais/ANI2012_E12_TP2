@@ -64,6 +64,7 @@ SoundFile sonFee;
 //Animaux
 PImage imgRenard;
 Animal renard, repere;
+AnimationClip clipRenard;
 
 //Baguette
 PImage imgBaguette;
@@ -150,6 +151,7 @@ void setup() {
   tabFees = new Fee[nbFees];
   for (int idx = 0 ; idx < nbFees ; idx++)
     tabFees[idx] = new Fee();
+  sonFee = new SoundFile (this, "audios/sonFee.wav");
    
   //Animaux
   imgRenard = loadImage("images/animaux/RENARD_S.png");
@@ -159,7 +161,8 @@ void setup() {
   //Animation
   String[] tabCourbeFee = {"rotation"};
   clipFee = new AnimationClip(tabCourbeFee);
-  sonFee = new SoundFile (this, "audios/sonFee.wav");
+  String[] tabCourbeRenard = {"positionX", "positionY", "rotation"};
+  clipRenard = new AnimationClip(tabCourbeRenard);
 
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
@@ -178,6 +181,7 @@ void setup() {
   //Animations
   sequencer = new Sequencer();
   sequencer.clipFee = clipFee;
+  sequencer.clipRenard = clipRenard;
   ajouterPosesCles();
   
   //Test
@@ -345,8 +349,10 @@ void keyReleased() {
   if (key == ' ')
     println("position : (" + repere.position.x + ", " + repere.position.y + "), rotation : " + repere.rotation);
     
-  if (key == 'z')
+  if (key == 'z') {
     renard.show = true;
+    renard.timeNow = renard.timeLast = millis();
+  }
 }
 
 void ajouterPosesCles() {
@@ -354,6 +360,14 @@ void ajouterPosesCles() {
   clipFee.curveCollection.get("rotation").addKeyframe( 0.0f, 0.0f);
   clipFee.curveCollection.get("rotation").addKeyframe( 0.5f, radians(-80.0f));
   clipFee.curveCollection.get("rotation").addKeyframe( 1.0f, 0.0f);
+  
+  //Renard
+  clipRenard.curveCollection.get("positionX").addKeyframe( 0.0f, -3.0f);
+  clipRenard.curveCollection.get("positionX").addKeyframe( 10.0f, 814.0f);
+  clipRenard.curveCollection.get("positionY").addKeyframe( 0.0f, 239.0f);
+  clipRenard.curveCollection.get("positionY").addKeyframe( 10.0f, 409.0f);
+  clipRenard.curveCollection.get("rotation").addKeyframe( 0.0f, 0.22f);
+  clipRenard.curveCollection.get("rotation").addKeyframe( 10.0f, 0.23f);
 }
 
 //Fonction appelée au début de chaque partie pour initialiser toutes les valeurs
@@ -408,16 +422,17 @@ void afficherPrincipal() {
   //Vidéo en arrière-plan (-5)
   auroresBoreales.play();
   imageMode(CORNER);
-  //image(auroresBoreales, 0, -250);
+  image(auroresBoreales, 0, -250);
   
   //Arrière-plan-4
   tint(255, 150);
   image(imgBackground4, 0, 0);
   tint(255, 255);
  
+  //Animaux
+  renard.update();
   
   //Arrière-plan-3
-  
   imageMode(CORNER);
   image(imgBackground3, 0, 0);
   if (renard.entree > 1)
@@ -436,7 +451,7 @@ void afficherPrincipal() {
   
   //Arrièreplan-1
   imageMode(CORNER);
-  //image(imgBackground1, 0, 0);
+  image(imgBackground1, 0, 0);
   
   //Mise à jour et affichage des fées
   for (Fee fee : tabFees) {
@@ -449,7 +464,7 @@ void afficherPrincipal() {
   
   //Affficher le premier-plan
   imageMode(CORNER);
-  //image(imgPremierPlan, 0, 0);
+  image(imgPremierPlan, 0, 0);
 }
 
 //Lecture successive des images de la vidéo
