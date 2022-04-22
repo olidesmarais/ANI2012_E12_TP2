@@ -1,11 +1,12 @@
 class Animal {
   
-  final static int ENTREE_DEVANT_GAUCHE = 0;
-  final static int ENTREE_DEVANT_DROITE = 1;
+  final static int ENTREE_DEVANT_GAUCHE  = 0;
+  final static int ENTREE_DEVANT_DROITE  = 1;
   final static int ENTREE_ARRIERE_GAUCHE = 2;
   final static int ENTREE_ARRIERE_DROITE = 3;
   
   PImage image;
+  Float decallageImage;
   int entree;
   boolean show, miroir;
   
@@ -61,11 +62,15 @@ class Animal {
       
       if (timelinePlayhead >= timelineDuration)
         timelinePlayhead -= timelineDuration;
-        
-      sequencer.update("clipRenard", timelinePlayhead);
-      position.x = sequencer.renardPositionX;
-      position.y = sequencer.renardPositionY;
-      rotation = sequencer.renardRotation;
+      
+      switch(entree) {
+        case ENTREE_DEVANT_GAUCHE:
+          sequencer.update("clipRenard", ENTREE_DEVANT_GAUCHE, timelinePlayhead);
+          position.x = sequencer.animauxPositionX[ENTREE_DEVANT_GAUCHE];
+          position.y = sequencer.animauxPositionY[ENTREE_DEVANT_GAUCHE];
+          rotation   = sequencer.animauxRotation[ENTREE_DEVANT_GAUCHE];
+          break;
+      }
     }
   }
   
@@ -81,9 +86,9 @@ class Animal {
       
       if (miroir) {
         scale(-1, 1);
-        image(image, 0, -image.height / 3);
+        image(image, 0, decallageImage); 
       } else
-        image(image, 0, -image.height / 3);
+        image(image, 0, decallageImage);
       popMatrix();
     }
   }

@@ -150,7 +150,7 @@ class Fee {
       timelinePlayhead += timeElapsed;
       if (timelinePlayhead >= timelineDuration)
         timelinePlayhead -= timelineDuration;
-      sequencer.update("clipFee", timelinePlayhead);
+      sequencer.update("clipFee", 0, timelinePlayhead);
       angleRotation = sequencer.rotationFee;
       
       //Le rire de la fait se fait entendre après l'avoir attrappée un certain moment

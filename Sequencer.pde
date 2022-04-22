@@ -5,29 +5,33 @@ class Sequencer {
   float rotationFee;
   
   //Clip amimaux
-  AnimationClip clipRenard;
-  float renardPositionX, renardPositionY, renardRotation;
+  AnimationClip[] clipAnimaux;
+  float[] animauxPositionX = new float [4];
+  float[] animauxPositionY = new float [4];
+  float[] animauxRotation  = new float [4];
  
-  
   float timeCurrent;
   
   Sequencer() {
   }
   
-  void update(String nomClip, float timelinePlayhead) {
+  void update(String nomClip, int idx, float timelinePlayhead) {
     timeCurrent = timelinePlayhead;
     
     if (nomClip == "clipFee")
-      rotationFee = evaluate("clipFee", "rotation", timelinePlayhead, false);
+      rotationFee = evaluate("clipFee", "rotation", timelinePlayhead, false, 0);
     
     if (nomClip == "clipRenard") {
-      renardPositionX = evaluate("clipRenard", "positionX", timelinePlayhead, true);
-      renardPositionY = evaluate("clipRenard", "positionY", timelinePlayhead, true);
-      renardRotation = evaluate("clipRenard", "rotation", timelinePlayhead, true);
+      switch(idx) {
+        case Animal.ENTREE_DEVANT_GAUCHE:
+          animauxPositionX[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipRenard", "positionX", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+          animauxPositionY[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipRenard", "positionY", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+          animauxRotation[Animal.ENTREE_DEVANT_GAUCHE]  = evaluate("clipRenard", "rotation", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+      }
     }
   }
   
-  float evaluate(String nomClip, String attributeName, float timestamp, boolean linear) {
+  float evaluate(String nomClip, String attributeName, float timestamp, boolean linear, int idx) {
     Keyframe keyframe1, keyframe2;
     
     float keyframeValue1 = 0.0f;
@@ -45,7 +49,7 @@ class Sequencer {
     if (nomClip == "clipFee") {
       curve = clipFee.curveCollection.get(attributeName);
     } else if (nomClip == "clipRenard") {
-      curve = clipRenard.curveCollection.get(attributeName);
+      curve = clipAnimaux[idx].curveCollection.get(attributeName);
     } else {
       curve = null;
     }

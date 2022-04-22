@@ -9,6 +9,8 @@ class Repere extends Animal {
     rotation = 0.0f;
     show = false;
     //image = createImage(10, 10, ARGB);
+    
+    decallageImage = 0.0f;
   }
   
   void render() {
