@@ -21,12 +21,24 @@ class Sequencer {
     if (nomClip == "clipFee")
       rotationFee = evaluate("clipFee", "rotation", timelinePlayhead, false, 0);
     
-    if (nomClip == "clipRenard") {
+    if (nomClip == "clipAnimal") {
       switch(idx) {
         case Animal.ENTREE_DEVANT_GAUCHE:
-          animauxPositionX[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipRenard", "positionX", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
-          animauxPositionY[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipRenard", "positionY", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
-          animauxRotation[Animal.ENTREE_DEVANT_GAUCHE]  = evaluate("clipRenard", "rotation", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+          animauxPositionX[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipAnimal", "positionX", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+          animauxPositionY[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipAnimal", "positionY", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+          animauxRotation[Animal.ENTREE_DEVANT_GAUCHE]  = evaluate("clipAnimal", "rotation", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
+        case Animal.ENTREE_DEVANT_DROITE:
+          animauxPositionX[Animal.ENTREE_DEVANT_DROITE] = evaluate("clipAnimal", "positionX", timelinePlayhead, true, Animal.ENTREE_DEVANT_DROITE);
+          animauxPositionY[Animal.ENTREE_DEVANT_DROITE] = evaluate("clipAnimal", "positionY", timelinePlayhead, true, Animal.ENTREE_DEVANT_DROITE);
+          animauxRotation[Animal.ENTREE_DEVANT_DROITE]  = evaluate("clipAnimal", "rotation", timelinePlayhead, true, Animal.ENTREE_DEVANT_DROITE);
+        case Animal.ENTREE_ARRIERE_GAUCHE:
+          animauxPositionX[Animal.ENTREE_ARRIERE_GAUCHE] = evaluate("clipAnimal", "positionX", timelinePlayhead, true, Animal.ENTREE_ARRIERE_GAUCHE);
+          animauxPositionY[Animal.ENTREE_ARRIERE_GAUCHE] = evaluate("clipAnimal", "positionY", timelinePlayhead, true, Animal.ENTREE_ARRIERE_GAUCHE);
+          animauxRotation[Animal.ENTREE_ARRIERE_GAUCHE]  = evaluate("clipAnimal", "rotation", timelinePlayhead, true, Animal.ENTREE_ARRIERE_GAUCHE);
+        case Animal.ENTREE_ARRIERE_DROITE:
+          animauxPositionX[Animal.ENTREE_ARRIERE_DROITE] = evaluate("clipAnimal", "positionX", timelinePlayhead, true, Animal.ENTREE_ARRIERE_DROITE);
+          animauxPositionY[Animal.ENTREE_ARRIERE_DROITE] = evaluate("clipAnimal", "positionY", timelinePlayhead, true, Animal.ENTREE_ARRIERE_DROITE);
+          animauxRotation[Animal.ENTREE_ARRIERE_DROITE]  = evaluate("clipAnimal", "rotation", timelinePlayhead, true, Animal.ENTREE_ARRIERE_DROITE);
       }
     }
   }
@@ -48,7 +60,7 @@ class Sequencer {
     
     if (nomClip == "clipFee") {
       curve = clipFee.curveCollection.get(attributeName);
-    } else if (nomClip == "clipRenard") {
+    } else if (nomClip == "clipAnimal") {
       curve = clipAnimaux[idx].curveCollection.get(attributeName);
     } else {
       curve = null;

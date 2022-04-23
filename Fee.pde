@@ -41,6 +41,7 @@ class Fee {
     translationCourante = new Vector3D(random(360), random(360), 0.0f);
     deltaAngleTranslation = random(2, 8);
     float hasard = random(1);
+    //Une chance sur deux qu'elle tourne dans l'autre sens
     if (hasard >= 5.0f)
       deltaAngleTranslation *= -1;
     
