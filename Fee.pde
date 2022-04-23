@@ -179,7 +179,7 @@ class Fee {
     coinImgActuelActuel.copy(determinerCoinImgActuel());
     
     //Position relative de la pointe de la baguette sur l'image
-    positionRelative.set( pointeBaguette.x - coinImgActuelActuel.x, pointeBaguette.y - coinImgActuelActuel.y, 0);
+    positionRelative.set( pointeBaguette.x - coinImgActuelActuel.x, pointeBaguette.y - coinImgActuelActuel.y, 0.0f);
     
     //Vérifier si la pointe de la baguette est dans le cadre de l'image
     if (positionRelative.x >= 0 && positionRelative.x <= dimension && positionRelative.y >= 0 && positionRelative.y <= dimension) {      

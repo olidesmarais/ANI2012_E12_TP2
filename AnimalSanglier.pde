@@ -1,11 +1,13 @@
-class Renard extends Animal {
+class AnimalSanglier extends Animal {
+
   float angleMarche = 0.0;
   
-  Renard() {
+  AnimalSanglier() {
     super();
-    image = imgRenard;
+    image = imgSanglier;
+    son = sonSanglier;
     
-    decallageImage = 0.0f - image.height / 3;
+    decallageImage = 0.0f - image.height / 5;
   }
   
   void update() {

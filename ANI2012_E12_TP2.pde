@@ -63,7 +63,8 @@ SoundFile sonFee;
 
 //Animaux
 PImage imgRenard, imgLapin, imgSanglier, imgOrignal;
-Animal renard, repere;
+SoundFile sonRenard, sonLapin, sonSanglier, sonOrignal; 
+Animal animal, repere;
 Animal[] tabAnimaux;
 AnimationClip clipAnimaux[] = new AnimationClip[4];
 
@@ -73,9 +74,6 @@ ParticleSystem psEtoile;
 int psEtoileCompte = 500;
 SoundFile sonEtoile1;
 Vector3D pointeBaguette;
-
-//Gestion du temps
-//float timeNow, timeLast, timeElapsed;
 
 //Musique
 Musique musique;
@@ -146,8 +144,12 @@ void setup() {
   imgLapin    = loadImage("images/animaux/LAPIN_S.png");
   imgSanglier = loadImage("images/animaux/SANGLIER_S.png");
   imgOrignal  = loadImage("images/animaux/ORIGNAL_S.png");
+  sonRenard = new SoundFile(this, "audios/animaux/sonRenard.wav");
+  sonLapin = new SoundFile(this, "audios/animaux/sonLapin.wav");
+  sonSanglier = new SoundFile(this, "audios/animaux/sonSanglier.mp3");
+  sonOrignal = new SoundFile(this, "audios/animaux/sonOrignal.wav");
   tabAnimaux = new Animal[10];
-  renard = new Renard();
+  animal = new AnimalOrignal();
   repere = new Repere();
   
   //Animation
@@ -235,10 +237,9 @@ void mousePressed() {
           fee.timeLast = millis();
       }
     }
+    if (animal.verifierSuperposition())
+      animal.son.play();
   }
-  
-  
-  
 }
 
 void mouseReleased() {
@@ -332,9 +333,9 @@ void keyReleased() {
     println("position : (" + repere.position.x + ", " + repere.position.y + "), rotation : " + repere.rotation);
     
   if (key == 'z') {
-    renard.show = true;
-    renard.timeNow = renard.timeLast = millis();
-    renard.timelinePlayhead = 0.0f;
+    animal.show = true;
+    animal.timeNow = animal.timeLast = millis();
+    animal.timelinePlayhead = 0.0f;
   }
 }
 
@@ -471,21 +472,21 @@ void afficherPrincipal() {
   tint(255, 255);
  
   //Animaux
-  renard.update();
+  animal.update();
   
   //Arrière-plan-3
   imageMode(CORNER);
   image(imgBackground3, 0, 0);
-  if (renard.entree > 1)
-    renard.render();
+  if (animal.entree > 1)
+    animal.render();
    //filter(BLUR, 2);
   
   //Arrière-plan-2
   
   imageMode(CORNER);
   image(imgBackground2, 0, 0);
-  if (renard.entree <= 1)
-    renard.render();
+  if (animal.entree <= 1)
+    animal.render();
   
   //Affichage de la brume
   psBrume.update(true);

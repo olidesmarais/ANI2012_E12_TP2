@@ -6,6 +6,7 @@ class Animal {
   final static int ENTREE_ARRIERE_DROITE = 3;
   
   PImage image;
+  SoundFile son;
   Float decallageImage;
   int entree;
   boolean show, miroir;
@@ -118,4 +119,11 @@ class Animal {
     }
   }
   
+  boolean verifierSuperposition() {
+    Vector3D coinImage = new Vector3D(position.x - (image.width * proportion) / 2, position.y - (image.height * proportion) / 2, 0.0f);
+    Vector3D positionRelative = new Vector3D(pointeBaguette.x - coinImage.x, pointeBaguette.y - coinImage.y, 0.0f);
+    
+    //Vérifier si la pointe de la baguette est dans le cadre de l'image
+    return positionRelative.x >= 0 && positionRelative.x <= image.width * proportion && positionRelative.y >= 0 && positionRelative.y <= image.height * proportion;
+  }
 }
