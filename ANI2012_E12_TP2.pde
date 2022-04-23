@@ -117,6 +117,8 @@ void setup() {
   imgBackground2 = loadImage("images/LAYER02_BCKGRND.png");
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
   imgBackground4 = loadImage("images/LAYER04_BCKGRND.png");
+  imgAccueil.filter(POSTERIZE, 200);
+  imgAccueil.filter(BLUR, 2);
   
   imgPremierPlan = loadImage("images/FORET_M1.png");
   auroresBoreales = new Movie(this, "video/videoAurore_2.mp4");
