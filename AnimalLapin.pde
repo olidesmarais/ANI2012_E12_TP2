@@ -15,6 +15,8 @@ class AnimalLapin extends Animal {
       hauteurSautMax = 10.0f;
     
     decallageImage = 0.0f ;
+    
+    super.blurImage();
   }
   
   void update() {

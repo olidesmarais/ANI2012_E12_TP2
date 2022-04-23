@@ -8,6 +8,8 @@ class AnimalSanglier extends Animal {
     son = sonSanglier;
     
     decallageImage = 0.0f - image.height / 5;
+    
+    super.blurImage();
   }
   
   void update() {

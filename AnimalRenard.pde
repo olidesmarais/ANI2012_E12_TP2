@@ -7,6 +7,8 @@ class AnimalRenard extends Animal {
     son = sonRenard;
     
     decallageImage = 0.0f - image.height / 3;
+    
+    super.blurImage();
   }
   
   void update() {

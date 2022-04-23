@@ -117,6 +117,11 @@ void setup() {
   imgBackground2 = loadImage("images/LAYER02_BCKGRND.png");
   imgBackground3 = loadImage("images/LAYER03_BCKGRND.png");
   imgBackground4 = loadImage("images/LAYER04_BCKGRND.png");
+  imgBackground1.filter(BLUR, 1);
+  imgBackground2.filter(BLUR, 1);
+  imgBackground3.filter(BLUR, 2);
+  imgBackground4.filter(BLUR, 2);
+  
   imgPremierPlan = loadImage("images/FORET_M1.png");
   auroresBoreales = new Movie(this, "video/videoAurore_2.mp4");
   auroresBoreales.loop();
@@ -124,7 +129,7 @@ void setup() {
   psBrume = new ParticleSystem(50, ParticleSystem.PARTICLE_TYPE_BRUME);
 
   //Feuillage
-  dataFeuilles = loadTable("donneesFeuilles.csv", "header");
+  dataFeuilles = loadTable("csv/donneesFeuilles.csv", "header");
   feuillage = new Feuillage();
 
   //Fée
@@ -484,15 +489,14 @@ void afficherPrincipal() {
   imageMode(CORNER);
   image(imgBackground3, 0, 0);
   gestionAnimaux.render(false);
-  
-  
-   //filter(BLUR, 2);
+  //filter(BLUR);
   
   //Arrière-plan-2
-  
   imageMode(CORNER);
+  //imgBackground2.filter(BLUR);
   image(imgBackground2, 0, 0);
   gestionAnimaux.render(true);
+  //filter(BLUR);
 
   
   //Affichage de la brume

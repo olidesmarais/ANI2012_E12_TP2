@@ -8,6 +8,8 @@ class AnimalOrignal extends Animal {
     son = sonOrignal;
     
     decallageImage = 0.0f - image.height / 5;
+    
+    super.blurImage();
   }
   
   void update() {

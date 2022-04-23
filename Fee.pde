@@ -153,14 +153,19 @@ class Fee {
       sequencer.update("clipFee", 0, timelinePlayhead);
       angleRotation = sequencer.rotationFee;
       
-      //Le rire de la fait se fait entendre après l'avoir attrappée un certain moment
-      delaiRire += timeElapsed;
-      if (delaiRire >= frequenceRire) {
-        sonFee.play();
-        delaiRire -= delaiRire;
-        frequenceRire = determinerFrequenceRire();
-        gestionAnimaux.apparitionAnimal();
-        attrapee = false;
+      //Le rire de la fait se fait entendre après l'avoir attrappée un certain moment,
+      //si des animaux sont disponibles pour apparaître. Lorsque la fée rit, elle se 
+      //libère de l'emprise de la baguette et un animal apparaît quelque part dans la 
+      //scène.
+      if (gestionAnimaux.animauxDispos.size() > 0) {
+        delaiRire += timeElapsed;
+        if (delaiRire >= frequenceRire) {
+          sonFee.play();
+          delaiRire -= delaiRire;
+          frequenceRire = determinerFrequenceRire();
+          gestionAnimaux.apparitionAnimal();
+          attrapee = false;
+        }
       }
       
     //Sinon, la translation et le battement d'ailes se poursuivent
