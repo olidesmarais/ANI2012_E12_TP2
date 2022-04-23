@@ -64,8 +64,8 @@ SoundFile sonFee;
 //Animaux
 PImage imgRenard, imgLapin, imgSanglier, imgOrignal;
 SoundFile sonRenard, sonLapin, sonSanglier, sonOrignal; 
-Animal animal, repere;
-Animal[] tabAnimaux;
+//Animal animal, repere;
+Animaux gestionAnimaux;
 AnimationClip clipAnimaux[] = new AnimationClip[4];
 
 //Baguette
@@ -148,9 +148,11 @@ void setup() {
   sonLapin = new SoundFile(this, "audios/animaux/sonLapin.wav");
   sonSanglier = new SoundFile(this, "audios/animaux/sonSanglier.mp3");
   sonOrignal = new SoundFile(this, "audios/animaux/sonOrignal.wav");
-  tabAnimaux = new Animal[10];
-  animal = new AnimalOrignal();
-  repere = new Repere();
+  gestionAnimaux = new Animaux();
+  
+  //Test
+  //animal = new AnimalOrignal(0);
+  //repere = new Repere();
   
   //Animation
   String[] tabCourbeFee = {"rotation"};
@@ -205,7 +207,7 @@ void draw() {
   afficherBaguette();
   
   //Test
-  if (isGoingLeft)
+  /*if (isGoingLeft)
     repere.position.x--;
   if (isGoingRight)
     repere.position.x++;
@@ -217,10 +219,10 @@ void draw() {
   if (isRotatingRight)
     repere.rotation += 0.01;
   if (isRotatingLeft)
-    repere.rotation -= 0.01;
+    repere.rotation -= 0.01;*/
     
 
-  repere.render();
+  //repere.render();
   //renard.render();
 }
 
@@ -237,8 +239,11 @@ void mousePressed() {
           fee.timeLast = millis();
       }
     }
-    if (animal.verifierSuperposition())
-      animal.son.play();
+    
+    for (Animal animal : gestionAnimaux.animauxShow) {
+      if (animal.verifierSuperposition())
+        animal.son.play();
+    }
   }
 }
 
@@ -326,16 +331,16 @@ void keyReleased() {
     isRotatingRight = false;
   if (keyCode == LEFT)
     isRotatingLeft = false;
-  if (key == '0')
+
     
-    
-  if (key == ' ')
-    println("position : (" + repere.position.x + ", " + repere.position.y + "), rotation : " + repere.rotation);
+  //Test
+  /*if (key == ' ')
+    println("position : (" + repere.position.x + ", " + repere.position.y + "), rotation : " + repere.rotation);*/
     
   if (key == 'z') {
-    animal.show = true;
-    animal.timeNow = animal.timeLast = millis();
-    animal.timelinePlayhead = 0.0f;
+    
+    if (gestionAnimaux.animauxDispos.size() >0)
+      gestionAnimaux.apparitionAnimal();
   }
 }
 
@@ -472,21 +477,23 @@ void afficherPrincipal() {
   tint(255, 255);
  
   //Animaux
-  animal.update();
+  gestionAnimaux.update();
+  
   
   //Arrière-plan-3
   imageMode(CORNER);
   image(imgBackground3, 0, 0);
-  if (animal.entree > 1)
-    animal.render();
+  gestionAnimaux.render(false);
+  
+  
    //filter(BLUR, 2);
   
   //Arrière-plan-2
   
   imageMode(CORNER);
   image(imgBackground2, 0, 0);
-  if (animal.entree <= 1)
-    animal.render();
+  gestionAnimaux.render(true);
+
   
   //Affichage de la brume
   psBrume.update(true);

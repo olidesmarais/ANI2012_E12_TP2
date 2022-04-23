@@ -2,8 +2,8 @@ class AnimalOrignal extends Animal {
 
   float angleMarche = 0.0;
   
-  AnimalOrignal() {
-    super();
+  AnimalOrignal(int typeEntree) {
+    super(typeEntree);
     image = imgOrignal;
     son = sonOrignal;
     

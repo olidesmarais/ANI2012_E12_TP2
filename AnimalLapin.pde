@@ -3,8 +3,9 @@ class AnimalLapin extends Animal {
   float angleSaut = 0.0;
   float hauteurSautMax;
   
-  AnimalLapin() {
-    super();
+  AnimalLapin(int typeEntree) {
+    super(typeEntree);
+    
     image = imgLapin;
     son = sonLapin;
     

@@ -3,11 +3,11 @@
 class Repere extends Animal {
   
   Repere() {
-    super();
+    super(0);
     
     position.set(centreX, centreY, 0.0f);
     rotation = 0.0f;
-    show = false;
+    //show = false;
     //image = createImage(10, 10, ARGB);
     
     decallageImage = 0.0f;
@@ -15,7 +15,7 @@ class Repere extends Animal {
   
   void render() {
     //super.render();
-    if (show) {
+    //if (show) {
       pushMatrix();
       translate(position.x, position.y);
       rotate(rotation);
@@ -31,6 +31,6 @@ class Repere extends Animal {
       line(-50, 0, 50, 0);
       
       popMatrix();
-    }
+   // }
   }
 }

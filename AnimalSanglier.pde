@@ -2,8 +2,8 @@ class AnimalSanglier extends Animal {
 
   float angleMarche = 0.0;
   
-  AnimalSanglier() {
-    super();
+  AnimalSanglier(int typeEntree) {
+    super(typeEntree);
     image = imgSanglier;
     son = sonSanglier;
     

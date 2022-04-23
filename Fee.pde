@@ -36,12 +36,14 @@ class Fee {
   float deltaAngleTranslation;
   
   Fee() {
+    //Initialisation pseudo-aléatoire des attributs de la fée
     angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
     translationMax = new Vector3D( random(25.0f, 100.0f), random(5.0, 50.0f), 0.0f);
     translationCourante = new Vector3D(random(360), random(360), 0.0f);
     deltaAngleTranslation = random(2, 8);
-    float hasard = random(1);
+    
     //Une chance sur deux qu'elle tourne dans l'autre sens
+    float hasard = random(1);
     if (hasard >= 5.0f)
       deltaAngleTranslation *= -1;
     
@@ -50,9 +52,6 @@ class Fee {
     
     //Détermination du type de fée
     type = determinerType();
-    
-    //En fonction du type déterminé aléatoirement selon les probabilités, 
-    //les attributs associées au type sont accordées à la fée
     
     tabImages = new PImage[3];
     dimension = int(random(80.0f, 120.0f));
@@ -88,7 +87,7 @@ class Fee {
     timelinePlayhead = 0.0f;
     timelineDuration = 1.0f;
     delaiRire = 0.0f;
-    frequenceRire = 2.0f;
+    frequenceRire = determinerFrequenceRire(); //2.0f;
   }
   
   int determinerType() {
@@ -159,6 +158,9 @@ class Fee {
       if (delaiRire >= frequenceRire) {
         sonFee.play();
         delaiRire -= delaiRire;
+        frequenceRire = determinerFrequenceRire();
+        gestionAnimaux.apparitionAnimal();
+        attrapee = false;
       }
       
     //Sinon, la translation et le battement d'ailes se poursuivent
@@ -259,5 +261,10 @@ class Fee {
       tabImages[idx].copy(tabImgRef[idx], 0, 0, tabImgRef[idx].width, tabImgRef[idx].height, 0, 0, dimension, dimension);
     }
     
+  }
+  
+  float determinerFrequenceRire() {
+    
+    return random (2.0f, 6.0);
   }
 }

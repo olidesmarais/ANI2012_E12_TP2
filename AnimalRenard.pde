@@ -1,8 +1,8 @@
 class AnimalRenard extends Animal {
   float angleMarche = 0.0;
   
-  AnimalRenard() {
-    super();
+  AnimalRenard(int typeEntree) {
+    super(typeEntree);
     image = imgRenard;
     son = sonRenard;
     
