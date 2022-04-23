@@ -1,62 +1,61 @@
+//Classe de type Fee
+
 class Fee {
+  //Type de fée, influançant sa couleur.
   final static int FEE_TYPE_BLEU  = 0;
   final static int FEE_TYPE_ROSE  = 1;
   final static int FEE_TYPE_JAUNE = 2;
   
-  //PVector position;
+  //Propriétés de la fée
   Vector3D position = new Vector3D();
-  
-  //int hauteur, largeur;
   int dimension;
-  
-  //float diametreContour;
   int type;
+  boolean attrapee;
   
-  PImage imgPapillon, imgFond;
+  //Propriétés audio-visuelles
+  PImage imgFond;
   PImage[] tabImages;
   int idxImageCourante;
   int couleurTeinte;
-  
-  //Proportion
-  //float angleProportionFond;
-  
+
+  //Transformation
   //Rotation
-  boolean attrapee;
   float angleRotation;
-  
-  //Animation
-  float timeLast, timeNow, timeElapsed;
-  float timelinePlayhead, timelineDuration;
-  float delaiRire, frequenceRire;
-  
   //Translation
   Vector3D translationMax;
   Vector3D translationCourante;
   Vector3D angleTranslation;
   float deltaAngleTranslation;
   
+  //Gestion du temps et animation
+  float timeLast, timeNow, timeElapsed;
+  float timelinePlayhead, timelineDuration;
+  float delaiRire, frequenceRire;
+  
+  //Constructeur
   Fee() {
-    //Initialisation pseudo-aléatoire des attributs de la fée
+    //Initialisation pseudo-aléatoire des propriétés de transformation de la fée
     angleTranslation = new Vector3D( 0.0f, 0.0f, 0.0f);
     translationMax = new Vector3D( random(25.0f, 100.0f), random(5.0, 50.0f), 0.0f);
     translationCourante = new Vector3D(random(360), random(360), 0.0f);
     deltaAngleTranslation = random(2, 8);
     
-    //Une chance sur deux qu'elle tourne dans l'autre sens
+    //Une fois sur deux, son déplacement se fait dans le sens inverse.
     float hasard = random(1);
     if (hasard >= 5.0f)
       deltaAngleTranslation *= -1;
     
-    //Position déterminée aléatoirement dans le bas de l'écran.
+    //Position déterminée aléatoirement, dans le bas de l'écran.
     position.set(random(200, width - 200), random(500, height - 200.0), 0);
     
-    //Détermination du type de fée
-    type = determinerType();
+    //Détermination du type de fée de façon aléatoire.
+    type = int(random(3));
     
-    tabImages = new PImage[3];
+    //Initialisation des propriétés audio-visuelles de la fée.
     dimension = int(random(80.0f, 120.0f));
+    tabImages = new PImage[3];
     idxImageCourante = int(random(2));
-    
+    //Propriétés dépendantes du type.
     switch(type) {
       case FEE_TYPE_BLEU :
         definirLesImages(feeRefBleu);
@@ -71,15 +70,10 @@ class Fee {
         couleurTeinte = color(255,239,48,255);
         break;
     }
-    
-    //Copie de l'image de référence pour le bon type 
-    imgPapillon = createImage(dimension, dimension, ARGB);
-    //imgPapillon.copy(tabImages[idxImageCourante], 0, 0, tabImages[idxImageCourante].width, tabImages[idxImageCourante].height, 0, 0, dimension, dimension);
-    
     imgFond = createImage(dimension, dimension, ARGB);
     imgFond.copy(feeRefFond, 0, 0, feeRefFond.width, feeRefFond.height, 0, 0, dimension, dimension);
-    //angleProportionFond = random(360.0f);
     
+    //Initialement, la fée n'est pas attrapée et ne subit pas de rotation.
     attrapee = false;
     angleRotation = 0.0f;
     
@@ -87,54 +81,16 @@ class Fee {
     timelinePlayhead = 0.0f;
     timelineDuration = 1.0f;
     delaiRire = 0.0f;
-    frequenceRire = determinerFrequenceRire(); //2.0f;
+    frequenceRire = determinerFrequenceRire();
   }
   
-  int determinerType() {
-    return int(random(3));
-    //return 2;
-  }
-  
-  void render() {
-    //Affichage de l'image associée à l'instance
-    imageMode(CENTER);
-    
-    //Transformation de la fée
-    pushMatrix();
-    
-    //Déplacement du système de coordonnées à la position de la fée.
-    translate(position.x, position.y);
-    
-    //Translation et rotation courantes
-    translate(translationCourante.x, translationCourante.y);
-    rotate(angleRotation);
-    
-    //Redimension de l'image de fond de la fée
-    pushMatrix();
-    scale(proportionFond());
-
-    tint(couleurTeinte);
-    image(imgFond, 0, 0);
-    tint(255, 255);
-
-    popMatrix();
-    
-    //Affichage
-    
-    if (idxImageCourante == 1) {
-      tint(255, 100);
-      image(tabImages[idxImageCourante], 15, -15);
-      tint(255, 255);
-    } else {
-      image(tabImages[idxImageCourante], 15, -15);
-    }
-    
-    popMatrix();
-  }
-  
+  //Fonction permettant de mettre à jour les propriétés de la fée.
+  //La fée possède une position fixe dans le canevas, mais virevolte grâce à une translation en X et Y
+  //appliquée pour déterminer sa position courante au moment de l'afficher. La position absolue de la
+  //fée n'est modifiée que lorsque la fée est attrapée par la baguette de l'utilisateur.
   void update() {
     
-    //Si la fée est attrapée : 
+    //Si la fée est attrapée :
     if (attrapee) {
       //Sa position devient celle de la pointe de la baguette, en conservant la translation courante.
       position.set(pointeBaguette.x - translationCourante.x, pointeBaguette.y - translationCourante.y, 0.0f);
@@ -146,17 +102,17 @@ class Fee {
       timeElapsed = (timeNow - timeLast) / 1000.0f;
       timeLast = timeNow;
       
-      //Rotation périodique de la fée par le biais d'une courbe d'animation 
+      //Une rotation périodique est appliquée à la fée. Cette rotation déterminée par
+      //interpolation en fonction des poses de sa courbe d'animation.
       timelinePlayhead += timeElapsed;
       if (timelinePlayhead >= timelineDuration)
         timelinePlayhead -= timelineDuration;
       sequencer.update("clipFee", 0, timelinePlayhead);
       angleRotation = sequencer.rotationFee;
       
-      //Le rire de la fait se fait entendre après l'avoir attrappée un certain moment,
-      //si des animaux sont disponibles pour apparaître. Lorsque la fée rit, elle se 
-      //libère de l'emprise de la baguette et un animal apparaît quelque part dans la 
-      //scène.
+      //Le rire de la fait se fait entendre suite à un moment variable après l'avoir attrappée,
+      //si un animal est disponible pour apparaître. Lorsque la fée rit, elle se libère de l'emprise
+      //de la baguette et un animal apparaît quelque part dans la scène.
       if (gestionAnimaux.animauxDispos.size() > 0) {
         delaiRire += timeElapsed;
         if (delaiRire >= frequenceRire) {
@@ -168,24 +124,65 @@ class Fee {
         }
       }
       
-    //Sinon, la translation et le battement d'ailes se poursuivent
+    //Si la fée n'est pas attrapée :
     } else {
+      //la translation courante et le battement d'ailes se poursuivent.
       translationCourante.copy(translationFee());
       angleRotation = 0.0f;
       idxImageCourante = (idxImageCourante + 1) % 3;
     }
   }
   
-  //Fonction permettant de vérifier si le joueur clique sur la fée avec sa baguette
+  //Fonction permettant d'afficher la fée.
+  void render() {
+
+    imageMode(CENTER);
+    
+    //Modification du système de coordonnées pour l'affichage de la fée.
+    pushMatrix();
+    
+    //Déplacement du système de coordonnées à la position de la fée.
+    translate(position.x, position.y);
+    
+    //Application de des translation et rotation courantes.
+    translate(translationCourante.x, translationCourante.y);
+    rotate(angleRotation);
+    
+    //Redimension de l'image de fond de la fée
+    pushMatrix();
+    scale(proportionFond());
+
+    //Coloration et affichage de l'arrière-plan de la fée.
+    tint(couleurTeinte);
+    image(imgFond, 0, 0);
+    tint(255, 255);
+
+    popMatrix();
+    
+    //Affichage de la fée. 
+    //Une transparence est appliquée à son image s'il s'agit du moment
+    //où ses ailes sont déployées au maximum vers l'avant (idx == 1);
+    if (idxImageCourante == 1) {
+      tint(255, 100);
+      image(tabImages[idxImageCourante], 15, -15);
+      tint(255, 255);
+    } else {
+      image(tabImages[idxImageCourante], 15, -15);
+    }
+
+    popMatrix();
+  }
+  
+  //Fonction permettant de vérifier si l'utilisateur clique sur la fée avec sa baguette.
   boolean verifierSuperposition() {    
 
     Vector3D coinImgActuelActuel = new Vector3D();
     Vector3D positionRelative = new Vector3D();
     
-    //Position du coin de l'image de la fée
+    //Déterminer la position du coin supérieur droit de l'image de la fée.
     coinImgActuelActuel.copy(determinerCoinImgActuel());
     
-    //Position relative de la pointe de la baguette sur l'image
+    //Déterminer la position relative de la pointe de la baguette sur l'image
     positionRelative.set( pointeBaguette.x - coinImgActuelActuel.x, pointeBaguette.y - coinImgActuelActuel.y, 0.0f);
     
     //Vérifier si la pointe de la baguette est dans le cadre de l'image
@@ -211,15 +208,13 @@ class Fee {
     return false;
   }
   
-  //Fonction régulant la redimension de l'arrière-plan de la fée
+  //Fonction régulant la redimension de l'arrière-plan de la fée.
+  //La taille de l'arrière-plan de la fée est directement proportionnel à la translation courante
+  //de la fée sur l'axe des absisse.
   float proportionFond() {
-    //Déterminer la proportion voulue
+    //Déterminer la proportion courante
     float proportion;
     proportion = 0.5f + sin(radians(angleTranslation.y)) * 0.3f;
-    //proportion = 0.5f + sin(radians(angleProportionFond)) * 0.3f;
-    
-    //Mise à jour de l'angle assiciée à l'intensité de la redimension 
-    //angleProportionFond = (angleProportionFond + 5.0) % 360;
     
     //Retour de la valeur de proportion calculée
     return proportion;
@@ -227,13 +222,14 @@ class Fee {
   
   //Fonction régulant la translation de la fée
   Vector3D translationFee() {
-    //Intensité de la translation en X et en Y
+    //Déterminer les translation courante.
     Vector3D translationCourante = new Vector3D( sin(radians(angleTranslation.x)) * translationMax.x, sin(radians(angleTranslation.y)) * translationMax.y, 0.0f);
     
-    //Mise à jour des angles assiciées à l'intensité de la translation 
+    //Mise à jour des angles régulant la variation de la translation courante la translation.
     angleTranslation.x = (angleTranslation.x + deltaAngleTranslation) % 360;
     angleTranslation.y = (angleTranslation.y + 2 * deltaAngleTranslation) % 360;
     
+    //Retourner la translation courante.
     return translationCourante;
   }
   
@@ -252,7 +248,7 @@ class Fee {
     positionActuelle.copy(determinerPositioActuelle());
     
     //Déterminer et retourner l'emplacement du coin de l'image
-    coinActuel.set(positionActuelle.x - imgPapillon.width / 2, positionActuelle.y - imgPapillon.height / 2, 0);
+    coinActuel.set(positionActuelle.x - tabImages[idxImageCourante].width / 2, positionActuelle.y - tabImages[idxImageCourante].height / 2, 0);
     
     return coinActuel;
   }
@@ -268,8 +264,9 @@ class Fee {
     
   }
   
+  //Fonction permettant de déterminer la durée d'attente entre le moment où l'utilisateur attrape
+  //une fée et le moment où elle rit.
   float determinerFrequenceRire() {
-    
     return random (2.0f, 6.0);
   }
 }

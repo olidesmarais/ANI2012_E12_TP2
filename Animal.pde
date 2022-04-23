@@ -1,11 +1,15 @@
+//Classe de type animal
+//Elle est manipulée depuis la classe Animaux
 class Animal {
   
+  //Différents points d'entrée dans le canevas
   final static int NB_ENTREES = 4;
   final static int ENTREE_DEVANT_GAUCHE  = 0;
   final static int ENTREE_DEVANT_DROITE  = 1;
   final static int ENTREE_ARRIERE_GAUCHE = 2;
   final static int ENTREE_ARRIERE_DROITE = 3;
   
+  //Propriétés audio-visuelles
   PImage image;
   SoundFile son;
   Float decallageImage;
@@ -13,6 +17,7 @@ class Animal {
   boolean miroir;
   float proportion;
   
+  //Positionnement dans l'espace
   Vector3D position = new Vector3D();
   float rotation;
   
@@ -20,6 +25,7 @@ class Animal {
   float timeLast, timeNow, timeElapsed;
   float timelinePlayhead, timelineDuration;
   
+  //Constructeur
   Animal(int typeEntree) {
     
     //Entrée par l'AVANT et la GAUCHE du canevas    = 0
@@ -28,6 +34,7 @@ class Animal {
     //Entrée par l'ARRIÈRE et la DROITE du canevas  = 3
     entree = typeEntree;
     
+    //Initialisation des propriétés en fonction du point d'entrée
     switch(entree) {
       case ENTREE_DEVANT_GAUCHE :
         position.set( -3.0f, 239.0f, 0.0f);
@@ -55,14 +62,15 @@ class Animal {
         break;
     }
     
-    //Animation
+    //Gestion du temps de l'animation
     timelinePlayhead = 0.0f;
     timeElapsed = 0.0f;
     timelineDuration = 30.0f;
   }
   
   //Fonction permettant des mettre à jour l'ordonnée et l'abscisse de la position ainsi
-  //que la rotation en fonction de la courbe d'animation adaptée au point d'entrée de l'animal
+  //que la rotation  de l'animal grâce à la courbe d'animation adaptée à son point d'entrée
+  //en fonction de l'interpolation de la courbe d'animation concernée.
   void update() {
   
     switch(entree) {
@@ -93,11 +101,12 @@ class Animal {
     }
   }
   
+  //Fonction permettant d'afficher l'animal
   void render(){
     imageMode(CENTER);
-    pushMatrix();
     
     //Modification du système de coordonnée en fonction de la position de l'animal.
+    pushMatrix();
     translate(position.x, position.y);
     rotate(rotation);
     scale(proportion);
@@ -114,7 +123,9 @@ class Animal {
   
   //Fonction permettant de vérifier si la pointe de la baguette se situe par-dessus l'image qui représente l'animal.
   boolean verifierSuperposition() {
+    //Déterminer la position du coin supérieur droit de l'image
     Vector3D coinImage = new Vector3D(position.x - (image.width * proportion) / 2, position.y - (image.height * proportion) / 2, 0.0f);
+    //Déterminer la position de la pointe de la baguette sur l'image
     Vector3D positionRelative = new Vector3D(pointeBaguette.x - coinImage.x, pointeBaguette.y - coinImage.y, 0.0f);
     
     //Vérifier si la pointe de la baguette est dans le cadre de l'image
