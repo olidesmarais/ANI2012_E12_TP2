@@ -64,9 +64,8 @@ SoundFile sonFee;
 //Animaux
 PImage imgRenard, imgLapin, imgSanglier, imgOrignal;
 SoundFile sonRenard, sonLapin, sonSanglier, sonOrignal; 
-//Animal animal, repere;
 Animaux gestionAnimaux;
-AnimationClip clipAnimaux[] = new AnimationClip[4];
+Table dataClipAnimaux;
 
 //Baguette
 PImage imgBaguette;
@@ -141,30 +140,25 @@ void setup() {
   for (int idx = 0 ; idx < nbFees ; idx++)
     tabFees[idx] = new Fee();
   sonFee = new SoundFile (this, "audios/sonFee.wav");
+  //Animation 
+  String[] tabCourbeFee = {"rotation"};
+  clipFee = new AnimationClip(tabCourbeFee);
    
   //Animaux
+  //Affichae
   imgRenard   = loadImage("images/animaux/RENARD_S.png");
   imgLapin    = loadImage("images/animaux/LAPIN_S.png");
   imgSanglier = loadImage("images/animaux/SANGLIER_S.png");
   imgOrignal  = loadImage("images/animaux/ORIGNAL_S.png");
+  //Audio
   sonRenard = new SoundFile(this, "audios/animaux/sonRenard.wav");
   sonLapin = new SoundFile(this, "audios/animaux/sonLapin.wav");
   sonSanglier = new SoundFile(this, "audios/animaux/sonSanglier.mp3");
   sonOrignal = new SoundFile(this, "audios/animaux/sonOrignal.wav");
+  //Collection
   gestionAnimaux = new Animaux();
-  
-  //Test
-  //animal = new AnimalOrignal(0);
-  //repere = new Repere();
-  
   //Animation
-  String[] tabCourbeFee = {"rotation"};
-  clipFee = new AnimationClip(tabCourbeFee);
-  String[] tabCourbeAnimaux = {"positionX", "positionY", "rotation"};
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE] = new AnimationClip(tabCourbeAnimaux);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE] = new AnimationClip(tabCourbeAnimaux);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE] = new AnimationClip(tabCourbeAnimaux);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE] = new AnimationClip(tabCourbeAnimaux);
+  dataClipAnimaux = loadTable("csv/posesCleesAnimaux.csv", "header");
 
   //Baguette
   imgBaguette = loadImage("images/BAGUETTE01.png");
@@ -184,7 +178,7 @@ void setup() {
   //Animations
   sequencer = new Sequencer();
   sequencer.clipFee = clipFee;
-  sequencer.clipAnimaux = clipAnimaux;
+  sequencer.clipAnimaux = gestionAnimaux.clipAnimaux;
   ajouterPosesCles();
   
   //Test
@@ -354,81 +348,9 @@ void ajouterPosesCles() {
   clipFee.curveCollection.get("rotation").addKeyframe( 1.0f, 0.0f);
   
   //Animaux
-  //ENTREE_DEVANT_GAUCHE
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionX").addKeyframe( 0.0f, -3.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionY").addKeyframe( 0.0f, 239.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("rotation").addKeyframe( 0.0f, 0.22f);
-  
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionX").addKeyframe( 20.0f, 839.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionY").addKeyframe( 20.0f, 415.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("rotation").addKeyframe(  20.0f, 0.19f);
-  
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionX").addKeyframe( 22.0f, 861.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionY").addKeyframe( 22.0f, 427.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("rotation").addKeyframe(  22.0f, 0.59f);
-  
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionX").addKeyframe( 30.0f, 1013.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("positionY").addKeyframe( 30.0f, 537.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE].curveCollection.get("rotation").addKeyframe(  30.0f, 0.62f);
-  
-  //ENTREE_DEVANT_DROITE
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionX").addKeyframe( 0.0f, 1013.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionY").addKeyframe( 0.0f, 537.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("rotation").addKeyframe(  0.0f, 0.62f);
-  
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionX").addKeyframe( 8.0f, 861.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionY").addKeyframe( 8.0f, 427.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("rotation").addKeyframe(  8.0f, 0.59f);
-  
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionX").addKeyframe( 10.0f, 839.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionY").addKeyframe( 10.0f, 415.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("rotation").addKeyframe(  10.0f, 0.19f);
-  
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionX").addKeyframe( 30.0f, -3.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("positionY").addKeyframe( 30.0f, 239.0f);
-  clipAnimaux[Animal.ENTREE_DEVANT_DROITE].curveCollection.get("rotation").addKeyframe(  30.0f, 0.22f);
-  
-  //ENTREE_ARRIERE_GAUCHE
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionX").addKeyframe( 0.0f, 293.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionY").addKeyframe( 0.0f, 474.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("rotation").addKeyframe(  0.0f, -0.77f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionX").addKeyframe( 4.0f, 403.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionY").addKeyframe( 4.0f, 370.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("rotation").addKeyframe(  4.0f, -0.78f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionX").addKeyframe( 6.0f, 434.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionY").addKeyframe( 6.0f, 347.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("rotation").addKeyframe(  6.0f, -0.13f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionX").addKeyframe( 28.0f, 1023.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionY").addKeyframe( 28.0f, 258.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("rotation").addKeyframe(  28.0f, -0.15f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionX").addKeyframe( 30.0f, 1102.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("positionY").addKeyframe( 30.0f, 241.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE].curveCollection.get("rotation").addKeyframe(  30.0f, -0.15f);
-  
-  //ENTREE_ARRIERE_DROITE
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionX").addKeyframe( 0.0f, 1102.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionY").addKeyframe( 0.0f, 241.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("rotation").addKeyframe(  0.0f, -0.15f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionX").addKeyframe( 2.0f, 1023.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionY").addKeyframe( 2.0f, 258.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("rotation").addKeyframe(  2.0f, -0.15f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionX").addKeyframe( 24.0f, 434.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionY").addKeyframe( 24.0f, 347.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("rotation").addKeyframe(  24.0f, -0.13f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionX").addKeyframe( 26.0f, 403.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionY").addKeyframe( 26.0f, 370.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("rotation").addKeyframe(  26.0f, -0.78f);
-  
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionX").addKeyframe( 30.0f, 293.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("positionY").addKeyframe( 30.0f, 474.0f);
-  clipAnimaux[Animal.ENTREE_ARRIERE_DROITE].curveCollection.get("rotation").addKeyframe(  30.0f, -0.77f);
+  for (int ligne = 0 ; ligne < dataClipAnimaux.getRowCount() ; ligne++) {
+    gestionAnimaux.clipAnimaux[dataClipAnimaux.getInt(ligne, 0)].curveCollection.get(dataClipAnimaux.getString(ligne, 1)).addKeyframe( dataClipAnimaux.getFloat(ligne, 2), dataClipAnimaux.getFloat(ligne, 3));
+  }
 } 
 
 

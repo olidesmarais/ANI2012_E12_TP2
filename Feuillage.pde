@@ -26,13 +26,13 @@ class Feuillage {
     
     tabFeuilles = new Feuille[dataFeuilles.getRowCount()];
     
-    for (int idx = 0 ; idx < dataFeuilles.getRowCount() ; idx++) {
-      posX = dataFeuilles.getFloat(idx, 0);
-      posY = dataFeuilles.getFloat(idx, 1);
-      angle = dataFeuilles.getFloat(idx, 2);
-      size = dataFeuilles.getFloat(idx, 3);
+    for (int ligne = 0 ; ligne < dataFeuilles.getRowCount() ; ligne++) {
+      posX = dataFeuilles.getFloat(ligne, 0);
+      posY = dataFeuilles.getFloat(ligne, 1);
+      angle = dataFeuilles.getFloat(ligne, 2);
+      size = dataFeuilles.getFloat(ligne, 3);
 
-      tabFeuilles[idx] = new Feuille(posX, posY, angle, size);
+      tabFeuilles[ligne] = new Feuille(posX, posY, angle, size);
     }
     
     

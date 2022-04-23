@@ -2,6 +2,7 @@
 
 class Animaux{
   
+  AnimationClip[] clipAnimaux;
   ArrayList<Animal> animauxShow, animauxDispos;
   Iterator<Animal> iterateur;
   Animal animal;
@@ -18,6 +19,13 @@ class Animaux{
       animauxDispos.add(new AnimalRenard(entree));
       animauxDispos.add(new AnimalSanglier(entree));
     }
+    
+    clipAnimaux = new AnimationClip[4];
+    String[] tabCourbeAnimaux = {"positionX", "positionY", "rotation"};
+    clipAnimaux[Animal.ENTREE_DEVANT_GAUCHE] = new AnimationClip(tabCourbeAnimaux);
+    clipAnimaux[Animal.ENTREE_DEVANT_DROITE] = new AnimationClip(tabCourbeAnimaux);
+    clipAnimaux[Animal.ENTREE_ARRIERE_GAUCHE] = new AnimationClip(tabCourbeAnimaux);
+    clipAnimaux[Animal.ENTREE_ARRIERE_DROITE] = new AnimationClip(tabCourbeAnimaux);
   }
   
   void update() {
@@ -85,5 +93,9 @@ class Animaux{
     //et retrait de la liste des animaux disponibles.
     animauxShow.add(animalAjoute);
     animauxDispos.remove(hasard);
+  }
+  
+  void ajouterPosesCles() {
+    
   }
 }
