@@ -120,11 +120,4 @@ class Animal {
     //Vérifier si la pointe de la baguette est dans le cadre de l'image
     return positionRelative.x >= 0 && positionRelative.x <= image.width * proportion && positionRelative.y >= 0 && positionRelative.y <= image.height * proportion;
   }
-  
-  void blurImage() {
-    if (entree <=1)
-      image.filter(BLUR, 1);
-    else
-      image.filter(BLUR, 4);
-  }
 }
