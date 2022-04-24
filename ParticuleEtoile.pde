@@ -52,7 +52,7 @@ class ParticuleEtoile extends ParticlePhysic {
   void update() {
     
     //Calcul de la distance entre la particule et la pointe de la baguette
-    float distanceSouris = dist(position.x, position.y, mouseX - imgBaguette.width + 75, mouseY - imgBaguette.height + 70);
+    float distanceSouris = dist(position.x, position.y, pointeBaguette.x, pointeBaguette.y);
     float distanceMax = 200.0f;
     
     //Si la particule est trop loin de la souris, elle ne bouge pas.
