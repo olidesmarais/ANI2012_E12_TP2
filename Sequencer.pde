@@ -1,3 +1,6 @@
+//Classe de type Sequencer
+//Gère les diffèrents clips d'animation du programme.
+
 class Sequencer {
   
   //Clip fée
@@ -15,13 +18,17 @@ class Sequencer {
   Sequencer() {
   }
   
+  //Fonction permettant de mettre à jour le séquenceur.
   void update(String nomClip, int idx, float timelinePlayhead) {
     timeCurrent = timelinePlayhead;
     
+    //Mise à jour du clip d'animation lié à la rotation des instances de la classe Fée
     if (nomClip == "clipFee")
       rotationFee = evaluate("clipFee", "rotation", timelinePlayhead, false, 0);
     
+    //Mise à jour des clips d'animation liés aux positons en ordonnée et en abscisse ainsi qu'à la rotation des instances de la classe Animal. 
     if (nomClip == "clipAnimal") {
+      //Sélection du clip d'animation lié à la position d'entrée de l'animal
       switch(idx) {
         case Animal.ENTREE_DEVANT_GAUCHE:
           animauxPositionX[Animal.ENTREE_DEVANT_GAUCHE] = evaluate("clipAnimal", "positionX", timelinePlayhead, true, Animal.ENTREE_DEVANT_GAUCHE);
@@ -43,6 +50,7 @@ class Sequencer {
     }
   }
   
+  //Évaluation de la valeur courant de la propriété.
   float evaluate(String nomClip, String attributeName, float timestamp, boolean linear, int idx) {
     Keyframe keyframe1, keyframe2;
     
@@ -99,7 +107,6 @@ class Sequencer {
       
       }
     }
-    
     return 0.0f;
   }
   

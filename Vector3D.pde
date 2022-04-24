@@ -1,19 +1,18 @@
-// ANI2012H22_Particles/Vector3D.pde
-// Classe de type Vector3D (un vecteur en 3 dimensions).
-// Cette classe peut aussi fonctionner en 2 dimensions,
-// simplement ignorer la composante en Z et la laisser à 0.
-
+//Classe de type Vector3D 
+//Elle est utilisé en 2 dimensions.
 class Vector3D
 {
   float x;
   float y;
   float z;
 
+  //Constructeur avec les paramètres par défaut
   Vector3D()
   {
     x = y = z = 0.0f;
   }
 
+  //Constructeur avec précision des paramètres
   Vector3D(float valueX, float valueY, float valueZ)
   {
     x = valueX;

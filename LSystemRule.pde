@@ -1,6 +1,5 @@
-// ANI2012H22_LSystem/LSystemRule.pde
-// Classe de type LSystemRule.
-
+//Classe de type LSystemRule.
+//Impliquée dans le système de Lindenmayer, utilisé par la classe Feuille.
 class LSystemRule
 {
   char input;

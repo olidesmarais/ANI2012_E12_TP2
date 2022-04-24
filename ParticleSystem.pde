@@ -1,8 +1,10 @@
-// ANI2012H22_Particles/ParticleSystem.pde
-// Classe de type ParticleSystem.
+//Classe de type ParticleSystem.
+//Responsable de la gestion des instances de la classe Particle.
+//Permet de gérer un système de particule.
 
 class ParticleSystem
 {
+  //Types de système de particules
   final static int PARTICLE_TYPE_ETOILE  = 1;
   final static int PARTICLE_TYPE_BRUME   = 2;
 
@@ -39,6 +41,7 @@ class ParticleSystem
 
   Particle particle;
 
+  //Constructeur
   ParticleSystem(int size, int type)
   {
     count = size;
@@ -46,6 +49,7 @@ class ParticleSystem
     init();
   }
 
+  //Fonction permettant l'initialisation d'un systèmne de particules
   void init()
   {
     system = new ArrayList<Particle>();
@@ -56,6 +60,9 @@ class ParticleSystem
     origin = new Vector3D(width / 2.0f, height / 2.0f, 0.0f);
     space = new Vector3D();
 
+    //Initialisation du système de particules en fonction de son type.
+    //PARTICLE_TYPE_ETOILE : 1
+    //PARTICLE_TYPE_BRUME  : 2
     for (index = 0; index < count; ++index)
     {
       switch (type)
@@ -81,6 +88,7 @@ class ParticleSystem
     timeLast= timeStart;
   }
 
+  //Mise à jour du système de particule en fonction de si de nouvelles particules doivent être crées.
   void update(boolean creerNouvelle)
   {
     // mise à jour des variables en lien avec le temps
@@ -129,7 +137,9 @@ class ParticleSystem
       }
     }
   }
+   
     
+  //Fonction permettant d'ajouter une nouvelle particule au système à un emplacement défini. 
   void addParticule(float positionX, float positionY)
   {
     if (particleReady.size() > 0)
@@ -148,8 +158,7 @@ class ParticleSystem
       print("particles system overload");
   }
 
-
-  //De nouvelles particules sont créées si la variable fournie en paramètre vaut true
+  //Mise à jour de l'émetteur en fonction du besoin en nouvelles particules.
   void updateEmitter(boolean creerNouvelle)
   {
     if (random(0.0f, 1.0f) < probabilitySpawn && creerNouvelle && particleReady.size() > 0)
@@ -168,6 +177,8 @@ class ParticleSystem
     }
   }
 
+  //Fonction permettant de retirer la particule de la collection active
+  //et de la placée dans la collection prête à être utilisée.
   void recycle(Particle p)
   {
     particleActive.remove(p);

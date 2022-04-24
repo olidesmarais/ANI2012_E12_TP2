@@ -1,25 +1,25 @@
-// ANI2012H22_Particles/Particle.pde
-// Classe de type Particle.
-
+//Classe de type Particle.
+//Elle regroupe tous les renseignements nécessaires dans la gestion des particules d'un système de particules. 
+//La collection de particule est gérée par la classe ParticleSystem.
 class Particle
 {
+  //Systère de particule
   ParticleSystem ps;
-
+  
+  //Proprietes
   Vector3D position;
-
   color colorDiffuse;
-
   boolean isExpired;
-
   float lifetime;
-
   float timer;
-
+  
+  //Gestion du temps
   float timeStart;
   float timeFrame;
   float timeElapsed;
   float timeActive;
 
+  //Constructeur
   Particle()
   {
     position = new Vector3D();
@@ -29,20 +29,8 @@ class Particle
     isExpired = true;
   }
 
-  void setPosition(float x, float y, float z)
-  {
-    position.x = x;
-    position.y = y;
-    position.z = z;
-  }
-
-  void randomize(float x, float y, float z)
-  {
-    position.x = random(0.0f, 1.0f) * x - x / 2.0f;
-    position.y = random(0.0f, 1.0f) * y - y / 2.0f;
-    position.z = random(0.0f, 1.0f) * z - z / 2.0f;
-  }
-
+  //Fonction permettant l'initialisation de la particule pour
+  //lui permettre d'être affichée.
   void init()
   {
     isExpired = false;
@@ -53,6 +41,7 @@ class Particle
     timeActive = 0;
   }
 
+  //Fonction permettant la mise à jour de la particule
   void update()
   {
     timeElapsed = (millis() - timeFrame) / 1000.0f;
@@ -65,6 +54,7 @@ class Particle
     timeActive = timeFrame - timeStart;
   }
 
+  //Fonction permettant d'afficher la particule.
   void render()
   {
     fill(colorDiffuse, 127);

@@ -1,14 +1,19 @@
+//Classe de type ParticuleEtoile. 
+//Elle hérite de la classe ParticlePhysic. 
+//Elle correspond au système de particules en forme d'étoile sur la pointe de la baguette. 
+//Le système est visible lorsque l'utilisateur appui sur la souris.
 class ParticuleEtoile extends ParticlePhysic {
   
   final static float probabilitySpawn = 0.5f;
   float radius;
 
+  //Constructeur
   ParticuleEtoile() {
     super();
     
+    //Propriétés
     colorDiffuse = color(255, 155);
     lifetime = 0.5f;
-    
     mass = 1.0f;
     speed = 100.0f;
     speedMax = 100.0f;
@@ -18,7 +23,8 @@ class ParticuleEtoile extends ParticlePhysic {
     radius = random(2.0f, 5.0f);
   }
   
-  
+  //Fonction permettant l'initialisation de la particule au moment 
+  //où elle devient visible.
   void init()
   {
     super.init();
@@ -31,8 +37,8 @@ class ParticuleEtoile extends ParticlePhysic {
     
     //Un son d'étoile se fait entendre à l'apparition d'une nouvelle ParticuleEtoile.
     //Ce son est panoramique en fonction de la position de la souris sur l'axe des X.
+    //Son volume est également proportionnel à la taille de l'étoile.
     sonEtoile1.amp(map(radius, 2.0f, 5.0f, 0.01f, 0.20f)); 
-    
     if (position.x >= 0 && position.x <= dimensionX)
       sonEtoile1.pan(map(position.x, 0, width, -1, 1));
     else if (position.x < 0)
@@ -42,6 +48,7 @@ class ParticuleEtoile extends ParticlePhysic {
     sonEtoile1.play();
   }
   
+  //Fonction permettant de mettre à jour la particule.
   void update() {
     
     //Calcul de la distance entre la particule et la pointe de la baguette
@@ -53,7 +60,7 @@ class ParticuleEtoile extends ParticlePhysic {
       force.set( 0.0f, 0.0f, 0.0f);
       velocity.set( 0.0f, 0.0f, 0.0f);
     
-    //Sinon, sa vitesse est proportionnelle à sa proximité avec la souris. 
+    //Sinon, sa vitesse est inversement proportionnelle à sa proximité avec la souris. 
     } else {
       force.set(
         map(distanceSouris, distanceMax, 0.0f, 0.0f, force.x),
@@ -71,6 +78,7 @@ class ParticuleEtoile extends ParticlePhysic {
     super.update();
   }
   
+  //Fonction permettant d'afficher la particule.
   void render() {
     
     noStroke();

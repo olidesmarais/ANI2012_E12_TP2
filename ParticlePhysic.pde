@@ -1,6 +1,7 @@
-// ANI2012H22_Particles/ParticlePhysic.pde
-// Classe de type ParticlePhysic, qui hérite de la classe Particle.
-
+//Classe de type ParticlePhysic. 
+//Elle hérite de la classe Particle.
+//Elle regroupe tous les paramètres nécessaires pour faire évoluer la particule
+//selon des concepts liés à la physique.
 class ParticlePhysic extends Particle
 {
   final static float probabilitySpawn = 0.618f;
@@ -14,6 +15,7 @@ class ParticlePhysic extends Particle
   float speed;
   float speedMax;
 
+  //Constructeur
   ParticlePhysic()
   {
     super();
@@ -32,6 +34,7 @@ class ParticlePhysic extends Particle
     noise = new Vector3D(1.0f, 1.0f, 0.0f);
   }
 
+  //Fonction permettant d'initialiser la particule
   void init()
   {
     super.init();
@@ -50,6 +53,7 @@ class ParticlePhysic extends Particle
     applyForce(random(-noise.x, noise.x), random(-noise.y, noise.y), 0.0f);
   }
 
+  //Fonction permettant de mettre à jour la particule.
   void update()
   {
     // appeler l'update de la classe parent
@@ -81,6 +85,7 @@ class ParticlePhysic extends Particle
     position.add(velocity);
   }
 
+  //Fonction permettant d'afficher la particule.
   void render()
   {
     noStroke();
